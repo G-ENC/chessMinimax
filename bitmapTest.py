@@ -113,9 +113,11 @@ for i in range(63):
     zeros = "".join(["0" for i in range(6-len(binaryNoZero))])
     print(binaryNoZero+zeros)
 
-shift =lsb_bitscan(np.array(0b10001111000000000000000000000000000001000001000)) 
+shift =lsb_bitscan(np.array(0b100011110001001010011011111010010101100000100000)) 
 print(shift)
 print(dec_to_bin(np.array(1)<<shift))
-shift_m = bitScanReverse(np.array(0b000000000000010000000000000000000000000000001000))
+shift_m = bitScanReverse(np.array(0b000000111100010101001111111000111111100011001000))
 print(dec_to_bin(np.array(1)<<shift_m))
+shift ^= shift_m
+print(dec_to_bin(shift))
 # def indexToRowAndFile(index):
