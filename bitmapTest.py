@@ -1,4 +1,5 @@
 import numpy as np
+from square import Square
 
 def print64BitString(bits):
     for i in range(64):
@@ -102,7 +103,7 @@ def bitScanReverse(bb):
     bb |= bb >> np.uint8(8)
     bb |= bb >> np.uint8(16)
     bb |= bb >> np.uint8(32)
-    return msb1[(np.uint64(bb) * debruijn64) >> np.uint8(58)]
+    return msb1[(bb * debruijn64) >> np.uint8(58)]
 
     
 def lsb_bitscan(bb):
@@ -113,11 +114,14 @@ for i in range(63):
     zeros = "".join(["0" for i in range(6-len(binaryNoZero))])
     print(binaryNoZero+zeros)
 
-shift =lsb_bitscan(np.array(0b100011110001001010011011111010010101100000100000)) 
+shift =lsb_bitscan(0b100011110001001010011011111010010101100000100000)
 print(shift)
 print(dec_to_bin(np.array(1)<<shift))
-shift_m = bitScanReverse(np.array(0b000000111100010101001111111000111111100011001000))
+shift_m = bitScanReverse(np.uint64(0b000000111100010101001111111000111111100011001000))
 print(dec_to_bin(np.array(1)<<shift_m))
 shift ^= shift_m
 print(dec_to_bin(shift))
-# def indexToRowAndFile(index):
+print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+sq1 = Square(63)
+print(dec_to_bin(sq1.toBitBoard()))
+decToBinGrid(sq1.toBitBoard())
