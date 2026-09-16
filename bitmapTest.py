@@ -70,7 +70,6 @@ print()
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
-print(dec_to_bin(debruijn64))
 
 index64 = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
@@ -108,7 +107,7 @@ def bitScanReverse(bb):
     
 def lsb_bitscan(bb):
     return index64[((np.uint64(bb&-bb)) * debruijn64)>>np.uint64(58)]
-
+print("lsb table")
 for i in range(63):
     binaryNoZero = dec_to_bin(index64[i])
     zeros = "".join(["0" for i in range(6-len(binaryNoZero))])
@@ -125,3 +124,5 @@ print("~~~~~~~~~~~~~~~~~~~~~~~~~")
 sq1 = Square(63)
 print(dec_to_bin(sq1.toBitBoard()))
 decToBinGrid(sq1.toBitBoard())
+print()
+print(dec_to_bin(debruijn64))
