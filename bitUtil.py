@@ -2,7 +2,16 @@ import numpy as np
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
-exampleBb = np.uint64(0b1)
+# exampleBbArray = [0, 0, 0, 0, 0, 0, 0, 0,
+#                   0, 0, 0, 1, 0, 0, 0, 0,
+#                   0, 0, 0, 1, 0, 0, 0, 0,
+#                   0, 0, 0, 1, 1, 0, 0, 0,
+#                   0, 0, 0, 0, 0, 0, 0, 0,
+#                   0, 0, 0, 0, 0, 0, 1, 0,
+#                   0, 0, 0, 0, 0, 0, 0, 0,
+#                   0, 0, 0, 0, 0, 0, 0, 1]
+
+exampleBb = np.uint64(0xFFFFFFFFFFFFFFFF)
 
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
@@ -37,4 +46,3 @@ def bitScanMsb(bb):
     bb |= bb >> np.uint8(16)
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
-
