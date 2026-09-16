@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import Enum, IntEnum
 
-class File(Enum):
+class File(IntEnum):
     A = 0
     B = 1
     C = 2
