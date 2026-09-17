@@ -9,8 +9,9 @@ class Square:
     def __str__(self):
         f = self.index%8
         r = self.index//8 + 1
+        
         return Coordinate(r*8+f).name
         
 
-    def toBitBoard(self):
+    def toBitBoard(self) -> np.uint64:
         return np.uint64(1) << self.index

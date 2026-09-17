@@ -28,11 +28,23 @@ def printBitBoardForEnumList():
 
 # set/get/pop methods
 def getBit(bitboard: np.uint64, square: Square) -> np.uint64:
-  return bitboard & (np.uint64(1) << square.toBitBoard())
+  return bitboard & (square.toBitBoard())
 
 def setBit(bitboard: np.uint64, square: Square) -> np.uint64:
-  bitboard |= np.uint64(1)<<np.uint64(square.toBitBoard())
+  bitboard |= square.toBitBoard()
   return bitboard
+
+def popBit(bitboard: np.uint64, square: Square) -> np.uint64:
+  if getBit(bitboard, square):
+    bitboard ^= square.toBitBoard()
+  return bitboard
+
+def clearBit(bitboard: np.uint64, square: Square) -> np.uint64:
+  return bitboard & (~square.toBitBoard())
+
+
+
+
 
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
