@@ -2,6 +2,37 @@ import numpy as np
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
+#print board
+def printBitBoard(bitboard):
+  print()
+  for rank in range(8):
+    for file in range(8):
+        #loop over every index and convert to square index
+        square_index = rank*8 + file
+        #print rank
+        if file == 0:
+            print("  %d   " % (8-rank), end="")
+        #either 1 or 0
+        print(1 if getBit(bitboard, square_index) else 0, end=" ")
+    print()
+  #print files
+  print("\n      a b c d e f g h \n")
+  #bitobard as decimal number
+  print(f"      Bitboard: {bitboard}\n\n")
+
+def printBoardWithCoordinates():
+  for rank in range(8):
+    for file in range(8):
+      print(f"'{chr(ord("a")+file)}{8-rank}'",end=", ")
+
+    print()
+
+# set/get/pop methods
+def getBit(bitboard, square_index):
+  return bitboard & (np.uint64(1) << square_index)
+  
+
+
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
    61, 58, 50, 42, 38, 29, 17,  4,
@@ -24,12 +55,6 @@ ms1bTable = np.array(
    13, 18,  8, 12,  7,  6,  5, 63], 
    dtype=np.uint8)
 
-
-def printBitBoard(bitboard):
-    for rank in range(8):
-        for file in range(8):
-            square_index = rank*8 + file
-            print(square_index)
 
 def bitScanLsb(bb):
     return ls1bTable[((np.uint64(bb&-bb)) * debruijn64)>>np.uint64(58)]
