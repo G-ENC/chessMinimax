@@ -16,7 +16,7 @@ empty_bb = ~empty_bb
 for file in range(8):
   for rank in range(8):
 
-    if(file == 0):
+    if(file == 7):
       square = Square(rank*8+file)
       empty_bb = clearBit(empty_bb, square)
 
