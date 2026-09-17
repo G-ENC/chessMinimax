@@ -1,26 +1,24 @@
 from bitUtil import *
 from square import Square
 from cosntants import *
-
-exampleBb = np.uint64(0xFFFFFFFFFF000000)
+from tables import *
 
 empty_bb = np.uint64(0)
 
-empty_bb |= np.uint64(1)<<0
+sq1 = Square(Coordinate.d5)
 
-#setting squares
-sq1 = Square(Coordinate.a8)
-sq2 = Square(Coordinate.b4)
-sq3 = Square(Coordinate.g7)
-empty_bb = setBit(empty_bb, sq1)
-empty_bb = setBit(empty_bb, sq2)
-empty_bb = setBit(empty_bb, sq3)
+printBitBoard(maskPawnAttacks(sq1, Color.WHITE))
 
-#clearing bit
-empty_bb = clearBit(empty_bb, sq1)
+# zero_A_File = []
 
-#printing board
-# print(type(empty_bb), type(Coordinate.e2))
+empty_bb = ~empty_bb
+
+for file in range(8):
+  for rank in range(8):
+
+    if(file == 0):
+      square = Square(rank*8+file)
+      empty_bb = clearBit(empty_bb, square)
+
 printBitBoard(empty_bb)
-# printBoardWithCoordinates()
-
+printBitBoard(~empty_bb)
