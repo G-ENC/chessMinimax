@@ -21,9 +21,13 @@ def maskPawnAttacks(square: Square, color: Color):
 
   #white piece
   if not color:
-    
-    attacks |= bitboard >> 7
-    attacks |= bitboard >> 9
+    if(getBit(FILE_A, square)):
+      attacks |= bitboard >> 7
+    elif(getBit(FILE_H, square)):
+      attacks |= bitboard >> 9
+    else:
+      attacks |= bitboard >> 7
+      attacks |= bitboard >> 9
     
   #black piece
   else:

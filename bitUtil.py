@@ -42,10 +42,6 @@ def popBit(bitboard: np.uint64, square: Square) -> np.uint64:
 def clearBit(bitboard: np.uint64, square: Square) -> np.uint64:
   return bitboard & (~square.toBitBoard())
 
-
-
-
-
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
    61, 58, 50, 42, 38, 29, 17,  4,
@@ -79,3 +75,16 @@ def bitScanMsb(bb):
     bb |= bb >> np.uint8(16)
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
+
+#FILE/RANK ISOLATION
+# for file in range(8):
+#   for rank in range(8):
+
+#     if(rank == 7):
+#       square = Square(rank*8+file)
+#       empty_bb = clearBit(empty_bb, square)
+
+# print("==============8th Rank==============")
+# printBitBoard(~empty_bb)
+# print("==============Not 8th Rank==============")
+# printBitBoard(empty_bb)
