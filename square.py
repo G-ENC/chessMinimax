@@ -1,16 +1,15 @@
 import numpy as np
-from cosntants import File
-
+from cosntants import *
 
 
 class Square:
     def __init__(self, index):
-        self.index = index
+        self.index = np.uint64(index)
     
     def __str__(self):
         f = self.index%8
         r = self.index//8 + 1
-        return "%s%d" % File(f).name,r
+        return Coordinate(r*8+f).name
         
 
     def toBitBoard(self):

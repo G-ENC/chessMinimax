@@ -1,4 +1,5 @@
 import numpy as np
+from square import Square
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
@@ -8,30 +9,30 @@ def printBitBoard(bitboard):
   for rank in range(8):
     for file in range(8):
         #loop over every index and convert to square index
-        square_index = rank*8 + file
+        square = Square(rank*8 + file)
         #print rank
         if file == 0:
             print("  %d   " % (8-rank), end="")
         #either 1 or 0
-        print(1 if getBit(bitboard, square_index) else 0, end=" ")
+        print(1 if getBit(bitboard, square) else 0, end=" ")
     print()
   #print files
   print("\n      a b c d e f g h \n")
   #bitobard as decimal number
   print(f"      Bitboard: {bitboard}\n\n")
 
-def printBoardWithCoordinates():
+def printBitBoardForEnumList():
   for rank in range(8):
     for file in range(8):
-      print(f"'{chr(ord("a")+file)}{8-rank}'",end=", ")
-
-    print()
+      print(f"{chr(ord("a")+file)}{8-rank} = {rank*8 +file}")
 
 # set/get/pop methods
-def getBit(bitboard, square_index):
-  return bitboard & (np.uint64(1) << square_index)
-  
+def getBit(bitboard: np.uint64, square: Square) -> np.uint64:
+  return bitboard & (np.uint64(1) << square.toBitBoard())
 
+def setBit(bitboard: np.uint64, square: Square) -> np.uint64:
+  bitboard |= np.uint64(1)<<np.uint64(square.toBitBoard())
+  return bitboard
 
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
@@ -54,7 +55,6 @@ ms1bTable = np.array(
    25, 39, 14, 33, 19, 30,  9, 24,
    13, 18,  8, 12,  7,  6,  5, 63], 
    dtype=np.uint8)
-
 
 def bitScanLsb(bb):
     return ls1bTable[((np.uint64(bb&-bb)) * debruijn64)>>np.uint64(58)]
