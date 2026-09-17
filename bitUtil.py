@@ -2,17 +2,6 @@ import numpy as np
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
-# exampleBbArray = [0, 0, 0, 0, 0, 0, 0, 0,
-#                   0, 0, 0, 1, 0, 0, 0, 0,
-#                   0, 0, 0, 1, 0, 0, 0, 0,
-#                   0, 0, 0, 1, 1, 0, 0, 0,
-#                   0, 0, 0, 0, 0, 0, 0, 0,
-#                   0, 0, 0, 0, 0, 0, 1, 0,
-#                   0, 0, 0, 0, 0, 0, 0, 0,
-#                   0, 0, 0, 0, 0, 0, 0, 1]
-
-exampleBb = np.uint64(0xFFFFFFFFFFFFFFFF)
-
 ls1bTable = np.array(
   [ 0,  1, 48,  2, 57, 49, 28,  3,
    61, 58, 50, 42, 38, 29, 17,  4,
@@ -34,6 +23,13 @@ ms1bTable = np.array(
    25, 39, 14, 33, 19, 30,  9, 24,
    13, 18,  8, 12,  7,  6,  5, 63], 
    dtype=np.uint8)
+
+
+def printBitBoard(bitboard):
+    for rank in range(8):
+        for file in range(8):
+            square_index = rank*8 + file
+            print(square_index)
 
 def bitScanLsb(bb):
     return ls1bTable[((np.uint64(bb&-bb)) * debruijn64)>>np.uint64(58)]
