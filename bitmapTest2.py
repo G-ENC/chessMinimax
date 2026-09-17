@@ -16,9 +16,11 @@ empty_bb = ~empty_bb
 for file in range(8):
   for rank in range(8):
 
-    if(file == 7):
+    if(rank == 7):
       square = Square(rank*8+file)
       empty_bb = clearBit(empty_bb, square)
 
-printBitBoard(empty_bb)
+print("==============8th Rank==============")
 printBitBoard(~empty_bb)
+print("==============Not 8th Rank==============")
+printBitBoard(empty_bb)
