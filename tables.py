@@ -11,29 +11,36 @@ RANK_8 = np.uint64(255)
 
 
                   # ATTACKS #
-def maskPawnAttacks(square: Square, color: Color):
-  
+def maskPawnAttacks(square: Square, color: Color) -> np.uint64:
   attacks = np.uint64(0)
-  
-  bitboard = np.uint64(0)
-
-  bitboard = setBit(bitboard, square)
-
+  bitboard = square.toBitBoard()
   #white piece
   if not color:
-    if(getBit(FILE_A, square)):
-      attacks |= bitboard >> 7
-    elif(getBit(FILE_H, square)):
-      attacks |= bitboard >> 9
-    else:
-      attacks |= bitboard >> 7
-      attacks |= bitboard >> 9
+    #white pawn at left most square can go to right diagonal
+    attacks |= (square.toBitBoard() & FILE_A) << np.uint(7) 
+    #white pawn at right most square can go to left diagonal
+    attacks |= (square.toBitBoard() & FILE_H) << np.uint(9) 
+    # if(getBit(FILE_A, square)):
+    #   attacks |= bitboard >> 7
+    # elif(getBit(FILE_H, square)):
+    #   attacks |= bitboard >> 9
+    # else:
+    #   attacks |= bitboard >> 7
+    #   attacks |= bitboard >> 9
     
   #black piece
   else:
-    pass
-
+    if(getBit(FILE_A, square)):
+      attacks |= bitboard << 9 
+    elif(getBit(FILE_H, square)):
+      attacks |= bitboard << 7
+    else:
+      attacks |= bitboard << 7
+      attacks |= bitboard << 9
   return attacks
+
+def maskHorseAttacks(square: Square, color: Color) -> np.uint64:
+
 
 #
   # =======A FILE=========    

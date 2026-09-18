@@ -5,9 +5,10 @@ from tables import *
 
 empty_bb = np.uint64(0)
 
-sq1 = Square(Coordinate.h5)
+sq1 = Square(Coordinate.a5)
 
-printBitBoard(maskPawnAttacks(sq1, Color.WHITE))
+printBitBoard(sq1.toBitBoard())
+printBitBoard(maskPawnAttacks(sq1, Color.BLACK))
 
 # zero_A_File = []
 
