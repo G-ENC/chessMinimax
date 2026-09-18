@@ -97,13 +97,68 @@ def maskBishopAttacks(square: Square) -> np.uint64:
 
   file = curr_file
   rank = curr_rank
-
-  while((file or rank )!= 7):
+  while((file<6 and rank<6)):
     file += 1
     rank += 1
-    attack = setBit(attack, square(rank*8+file))
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
 
+  file = curr_file
+  rank = curr_rank
+  while((file>1 and rank>1)):
+    file -= 1
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+
+  file = curr_file
+  rank = curr_rank
+  while((file>1 and rank<6)):
+    file -= 1
+    rank += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+
+  file = curr_file
+  rank = curr_rank
+  while((file<6 and rank>1)):
+    file += 1
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
   return attack
+
+BISHOP_ATTACKS = np.fromiter((maskBishopAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64(), count=64)
+
+def maskRookAttacks(square: Square) -> np.uint64:
+  attack = np.uint64(0)
+
+  curr_file = square.index%8
+  curr_rank = square.index//8
+
+  file = curr_file
+  rank = curr_rank
+  while((file<6)):
+    file += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+
+  file = curr_file
+  rank = curr_rank
+  while((file>1)):
+    file -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+
+  file = curr_file
+  rank = curr_rank
+  while((rank<6)):
+    rank += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+
+  file = curr_file
+  rank = curr_rank
+  while((rank>1)):
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+  return attack
+
+
+ROOK_ATTACKS = np.fromiter((maskRookAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64(), count=64)
 
 #
   # =======A FILE=========    

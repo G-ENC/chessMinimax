@@ -5,20 +5,22 @@ from tables import *
 
 empty_bb = np.uint64(0)
 
-sq1 = Square(Coordinate.h5)
-sq2 = Square(Coordinate.a5)
-sq3 = Square(Coordinate.e8)
-sq4 = Square(Coordinate.e1)
+sq1 = Square(Coordinate.e5)
+sq2 = Square(Coordinate.h8)
+sq3 = Square(Coordinate.h1)
+sq4 = Square(Coordinate.a1)
 sq5 = Square(Coordinate.a8)
 
 # printBitBoard(sq1.toBitBoard())
-printBitBoard(maskBishopAttacks(sq5))
+# printBitBoard(maskRookAttacks(sq1))
+# printBitBoard(maskRookAttacks(sq2))
+# printBitBoard(maskRookAttacks(sq3))
+# printBitBoard(maskRookAttacks(sq4))
 
 
 
-
-# for i in range(64):
-#   printBitBoard(KING_ATTACKS[i])
+for i in range(64):
+  printBitBoard(ROOK_ATTACKS[i])
 
 
 # zero_A_File = []
