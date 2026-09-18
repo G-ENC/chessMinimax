@@ -89,6 +89,22 @@ def maskKingAttacks(square: Square) -> np.uint64:
 
 KING_ATTACKS = np.fromiter((maskKingAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64, count=64)
 
+def maskBishopAttacks(square: Square) -> np.uint64:
+  attack = np.uint64(0)
+
+  curr_file = square.index%8
+  curr_rank = square.index//8
+
+  file = curr_file
+  rank = curr_rank
+
+  while((file or rank )!= 7):
+    file += 1
+    rank += 1
+    attack = setBit(attack, square(rank*8+file))
+
+  return attack
+
 #
   # =======A FILE=========    
   # 8   1 0 0 0 0 0 0 0 
