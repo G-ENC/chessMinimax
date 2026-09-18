@@ -19,7 +19,7 @@ def printBitBoard(bitboard):
   #print files
   print("\n      a b c d e f g h \n")
   #bitobard as decimal number
-  print(f"      Bitboard: {bitboard}\n\n")
+  print(f"      Bitboard: {bitboard}\n")
 
 def printBitBoardForEnumList():
   for rank in range(8):
@@ -76,15 +76,3 @@ def bitScanMsb(bb):
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
 
-#FILE/RANK ISOLATION
-# for file in range(8):
-#   for rank in range(8):
-
-#     if(rank == 7):
-#       square = Square(rank*8+file)
-#       empty_bb = clearBit(empty_bb, square)
-
-# print("==============8th Rank==============")
-# printBitBoard(~empty_bb)
-# print("==============Not 8th Rank==============")
-# printBitBoard(empty_bb)
