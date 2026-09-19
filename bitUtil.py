@@ -14,7 +14,10 @@ def printBitBoard(bitboard):
         if file == 0:
             print("  %d   " % (8-rank), end="")
         #either 1 or 0
-        print(1 if getBit(bitboard, square) else 0, end=" ")
+        RED = "\033[32m"
+        GRAY = "\033[90m"
+        bit = RED if getBit(bitboard, square) else GRAY
+        print(f"{bit}█▉\033[00m", end="")
     print()
   #print files
   print("\n      a b c d e f g h \n")
@@ -77,3 +80,14 @@ def getMsbIndex(bb: np.uint64):
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
 
+def setOccupancy(index: np.uint8, bits_in_mask: np.uint8, attack_mask: np.uint64):
+
+  occupacy = np.uint64(0)
+
+  for count in range(bits_in_mask):
+    square = Square(getLsbIndex(attack_mask))
+    clearBit(attack_mask, square)
+    if(index & (1<<count)):
+        occupacy |= (np.uint64(1)<<square)
+
+  return occupacy

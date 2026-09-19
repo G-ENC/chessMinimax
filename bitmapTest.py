@@ -19,8 +19,8 @@ print(getLsbIndex(blocks))
 print(getMsbIndex(blocks))
 printBitBoard(Square(getLsbIndex(blocks)).toBitBoard())
 printBitBoard(Square(getMsbIndex(blocks)).toBitBoard())
-print(index_to_coordinates[getLsbIndex(blocks)])
-print(index_to_coordinates[getMsbIndex(blocks)])
+
+
 # for i in range(64):
 #   printBitBoard(ROOK_ATTACKS[i])
 
