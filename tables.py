@@ -160,6 +160,99 @@ def maskRookAttacks(square: Square) -> np.uint64:
 
 ROOK_ATTACKS = np.fromiter((maskRookAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64(), count=64)
 
+def maskBishopAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
+  attack = np.uint64(0)
+
+  curr_file = square.index%8
+  curr_rank = square.index//8
+
+  file = curr_file
+  rank = curr_rank
+  while((file<7 and rank<7)):
+    file += 1
+    rank += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((file>0 and rank>0)):
+    file -= 1
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((file>0 and rank<7)):
+    file -= 1
+    rank += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((file<7 and rank>0)):
+    file += 1
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  return attack
+
+def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
+  attack = np.uint64(0)
+
+  curr_file = square.index%8
+  curr_rank = square.index//8
+
+  file = curr_file
+  rank = curr_rank
+  while((file<7)):
+    file += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((file>0)):
+    file -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((rank<7)):
+    rank += 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  file = curr_file
+  rank = curr_rank
+  while((rank>0)):
+    rank -= 1
+    attack |= np.uint64(1)<<np.uint8(rank*8+file) 
+    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+      break
+
+  return attack
+
+def countBits(bitboard: np.uint64) -> np.uint8:
+  count = np.uint8(0)
+
+  while(bitboard):
+    bitboard &= bitboard -1
+    count += 1
+
+  return count
+
 #
   # =======A FILE=========    
   # 8   1 0 0 0 0 0 0 0 

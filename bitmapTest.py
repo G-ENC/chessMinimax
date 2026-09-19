@@ -6,21 +6,18 @@ from tables import *
 empty_bb = np.uint64(0)
 
 sq1 = Square(Coordinate.e5)
-sq2 = Square(Coordinate.h8)
-sq3 = Square(Coordinate.h1)
-sq4 = Square(Coordinate.a1)
-sq5 = Square(Coordinate.a8)
+sq2 = Square(Coordinate.e6)
+sq3 = Square(Coordinate.a5)
+sq4 = Square(Coordinate.g5)
+sq5 = Square(Coordinate.e2)
 
+blocks = sq2.toBitBoard()|sq3.toBitBoard()|sq4.toBitBoard()|sq5.toBitBoard()
+printBitBoard(blocks)
 # printBitBoard(sq1.toBitBoard())
-# printBitBoard(maskRookAttacks(sq1))
-# printBitBoard(maskRookAttacks(sq2))
-# printBitBoard(maskRookAttacks(sq3))
-# printBitBoard(maskRookAttacks(sq4))
-
-
-
-for i in range(64):
-  printBitBoard(ROOK_ATTACKS[i])
+printBitBoard(maskRookAttacksWithBlocker(sq1, blocks))
+print(bitCount(blocks))
+# for i in range(64):
+#   printBitBoard(ROOK_ATTACKS[i])
 
 
 # zero_A_File = []
