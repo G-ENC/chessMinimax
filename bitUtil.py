@@ -1,5 +1,6 @@
 import numpy as np
 from square import Square
+import random
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
@@ -83,11 +84,14 @@ def getMsbIndex(bb: np.uint64):
 def setOccupancy(index: np.uint8, bits_in_mask: np.uint8, attack_mask: np.uint64):
 
   occupacy = np.uint64(0)
-
+#idk what is going on
   for count in range(bits_in_mask):
     square = Square(getLsbIndex(attack_mask))
-    clearBit(attack_mask, square)
-    if(index & (1<<count)):
-        occupacy |= (np.uint64(1)<<square)
-
+    attack_mask = clearBit(attack_mask, square)
+    if(index & (np.uint64(1)<<count)):
+        occupacy |= (square.toBitBoard())
   return occupacy
+
+
+
+   

@@ -2,6 +2,7 @@ from bitUtil import *
 from square import Square
 from cosntants import *
 from tables import *
+from randomUtil import *
 
 empty_bb = np.uint64(0)
 
@@ -11,15 +12,10 @@ sq3 = Square(Coordinate.a5)
 sq4 = Square(Coordinate.g5)
 sq5 = Square(Coordinate.e2)
 
-blocks = sq2.toBitBoard()|sq3.toBitBoard()|sq4.toBitBoard()|sq5.toBitBoard()
-printBitBoard(blocks)
-# printBitBoard(sq1.toBitBoard())
-printBitBoard(maskRookAttacksWithBlocker(sq1, blocks))
-print(getLsbIndex(blocks))
-print(getMsbIndex(blocks))
-printBitBoard(Square(getLsbIndex(blocks)).toBitBoard())
-printBitBoard(Square(getMsbIndex(blocks)).toBitBoard())
-
+for i in range(4096):
+  # printBitBoard(setOccupancy(i, countBits(maskBishopAttacks(sq1)),maskBishopAttacks(sq1)))
+  printBitBoard(generateMagicNumber())
+  input() 
 
 # for i in range(64):
 #   printBitBoard(ROOK_ATTACKS[i])
@@ -36,4 +32,3 @@ printBitBoard(Square(getMsbIndex(blocks)).toBitBoard())
 
 # print("==============g file==============")
 # printBitBoard(empty_bb)
-
