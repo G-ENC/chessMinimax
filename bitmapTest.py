@@ -20,7 +20,6 @@ for i in range(4096):
 # for i in range(64):
 #   printBitBoard(ROOK_ATTACKS[i])
 
-
 # zero_A_File = []
 # FILE/RANK ISOLATION
 # for file in range(8):
