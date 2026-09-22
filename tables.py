@@ -215,7 +215,7 @@ def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
   while((file<7)):
     file += 1
     attack |= np.uint64(1)<<np.uint8(rank*8+file) 
-    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+    if(np.uint64(block) & np.uint64(1)<<np.uint8(rank*8+file)):
       break
 
   file = curr_file
@@ -223,7 +223,7 @@ def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
   while((file>0)):
     file -= 1
     attack |= np.uint64(1)<<np.uint8(rank*8+file) 
-    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+    if(np.uint64(block) & np.uint64(1)<<np.uint8(rank*8+file)):
       break
 
   file = curr_file
@@ -231,7 +231,7 @@ def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
   while((rank<7)):
     rank += 1
     attack |= np.uint64(1)<<np.uint8(rank*8+file) 
-    if(block & np.uint64(1)<<np.uint8(rank*8+file)):
+    if(np.uint64(block) & np.uint64(1)<<np.uint8(rank*8+file)):
       break
 
   file = curr_file
