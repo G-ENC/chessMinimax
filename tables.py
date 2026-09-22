@@ -253,6 +253,8 @@ def countBits(bitboard: np.uint64) -> np.uint8:
 
   return count
 
+
+
 #
   # =======A FILE=========    
   # 8   1 0 0 0 0 0 0 0 

@@ -75,10 +75,24 @@ class Coordinate(IntEnum):
     f1 = 61
     g1 = 62
     h1 = 63
+    no_sq = -1
+
+
+# 0001 1 white king can castle to king side
+# 0010 2 white king can castle to sqeen side
+# 0100 4 black king can castle to king side
+# 1000 8 black king can castle to squeen side
+
+class Castle(IntEnum):
+    wk = 1
+    wq = 2 
+    bk = 4
+    bq = 8
 
 class Color(IntEnum):
     WHITE = 0
     BLACK = 1
+    BOTH = 2
 
     def __invert__(self):
         if self == Color.WHITE:
@@ -95,3 +109,24 @@ index_to_coordinates = ['a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',
                         'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2', 
                         'a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1']
 
+class Piece(IntEnum):
+    PAWN = 0
+    KNIGHT = 1
+    BISHOP = 2
+    ROOK = 3
+    QUEEN = 4
+    KING = 5
+
+    def to_char(self):
+        if self == Piece.PAWN:
+            return 'p'
+        elif self == Piece.KNIGHT:
+            return 'n'
+        elif self == Piece.BISHOP:
+            return 'b'
+        elif self == Piece.ROOK:
+            return 'r'
+        elif self == Piece.QUEEN:
+            return 'q'
+        elif self == Piece.KING:
+            return 'k'

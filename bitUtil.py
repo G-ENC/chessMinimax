@@ -38,10 +38,10 @@ def setBit(bitboard: np.uint64, square: Square) -> np.uint64:
   bitboard |= square.toBitBoard()
   return bitboard
 
-def popBit(bitboard: np.uint64, square: Square) -> np.uint64:
-  if getBit(bitboard, square):
-    bitboard ^= square.toBitBoard()
-  return bitboard
+# def popBit(bitboard: np.uint64, square: Square) -> np.uint64:
+#   if getBit(bitboard, square):
+#     bitboard ^= square.toBitBoard()
+#   return bitboard
 
 def clearBit(bitboard: np.uint64, square: Square) -> np.uint64:
   return bitboard & (~square.toBitBoard())
