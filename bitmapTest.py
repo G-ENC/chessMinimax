@@ -18,11 +18,11 @@ sq5 = Square(Coordinate.e2)
 
 
 
-init_magic_numbers()
-# for i in range(4096):
-#   printBitBoard(setOccupancy(i, countBits(maskBishopAttacks(sq1)),maskBishopAttacks(sq1)))
-#   # printBitBoard(generateMagicNumber())
-#   input() 
+# init_magic_numbers()
+for i in range(4096):
+  printBitBoard(setOccupancy(i, countBits(maskBishopAttacks(sq1)),maskBishopAttacks(sq1)))
+#   printBitBoard(generateMagicNumber())
+  input() 
 
 # for i in range(64):
 #   printBitBoard(ROOK_ATTACKS[i])
