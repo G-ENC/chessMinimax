@@ -2,33 +2,27 @@ from bitBoard import BitBoard
 import pygame
 
 
+class Piece:
 
-class Game:
+  def __init__(self):
+    
 
-  def __init__(self,screen_w=800, screen_h=800):
+class ChessBoard:
 
-
+  def __init__(self, screen_w, screen_h, screen):
+    self.screen = screen
     self.width = screen_w
     self.height = screen_h
+    self.n = 8
 
-    self.run = True
-
-    pygame.init()
-
-    self.screen = pygame.display.set_mode((self.width, self.height))
-
-    self.clock = pygame.time.Clock()
-
-
-
-  def drawCheckerBoardPattern(self, n=8):
-    cell_w = self.width/n
-    cell_h = self.height/n
+  def drawCheckerBoardPattern(self):
+    cell_w = self.width/self.n
+    cell_h = self.height/self.n
 
     white = True
-    for column in range(n):
+    for column in range(self.n):
       white = not white
-      for row in range(n):
+      for row in range(self.n):
         sq_rect = pygame.Rect(cell_w*row, cell_h*column, cell_w, cell_h)
         if white:
           pygame.draw.rect(self.screen, (0,0,0), sq_rect)
@@ -36,10 +30,21 @@ class Game:
           pygame.draw.rect(self.screen, (200,0,200), sq_rect)
         white = not white
 
+  # def drawPieces(self):
+   
+
+class Game:
+
+  def __init__(self,screen_w=800, screen_h=800):
+    self.run = True
+    pygame.init()
+    self.screen = pygame.display.set_mode((screen_w, screen_h))
+    self.clock = pygame.time.Clock()   
+    self.cb = ChessBoard(screen_w,screen_h,self.screen)
+
   def initGame(self):
 
-    self.drawCheckerBoardPattern()
-
+    self.cb.drawCheckerBoardPattern()
     while self.run:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
