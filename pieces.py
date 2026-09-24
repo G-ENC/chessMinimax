@@ -1,15 +1,14 @@
 from square import Square
-
-class Piece:
-  def __init__(self):
-    self.color
-    self.coordinates = []
-    self.bitmap
+import numpy as np
 
 class Pawn:
   def __init__(self):
-   self.piece = Piece()
-   self.square = Square()
+    self.color=None
+    self.coordinates = []
+    self.bitmap=None
+    self.bitmap = np.uint64(0x00FF000000000000)
+    self.filePath = "pieceImages/pawn.png"
+
    
 
 

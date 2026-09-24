@@ -1,6 +1,7 @@
 import numpy as np
 from square import Square
 
+
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
 #print board

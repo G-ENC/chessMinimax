@@ -1,10 +1,8 @@
 from bitBoard import BitBoard
 import pygame
 import numpy as np 
-from bitUtil import countBits, getLsbIndex
+from bitUtil import *
 from pieces import *
-
-
 
 class ChessBoard:
 
@@ -19,13 +17,13 @@ class ChessBoard:
     self.cell_w = self.width/self.n
     self.cell_h = self.height/self.n
 
-
   def indexToScreenCoordinates(self, index):
     row = index%8
     column = index//8
-
-     
-
+    x_co = row*self.cell_w + self.cell_w/2
+    y_co = column*self.cell_h + self.cell_h/2
+    return(x_co,y_co)
+  
   def drawCheckerBoardPattern(self):
     white = True
     for column in range(self.n):
@@ -39,10 +37,19 @@ class ChessBoard:
         white = not white
 
   def drawPiecesFromBitmap(self):
-    print(self.pawn.piece.coordinates) 
+    bitmap = self.pawn.bitmap
+    image = pygame.image.load(f"{self.pawn.filePath}").convert_alpha()
+    image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    while bitmap:
+      index = getLsbIndex(bitmap)
+      
+      coords = self.indexToScreenCoordinates(index)
+      self.screen.blit(image, coords)
 
+      bitmap = clearBit(bitmap, Square(index)) 
+    
 class Game:
-
+  
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
     pygame.init()
@@ -53,6 +60,8 @@ class Game:
   def initGame(self):
 
     self.cb.drawCheckerBoardPattern()
+    self.cb.drawPiecesFromBitmap()
+    
     while self.run:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
