@@ -1,6 +1,5 @@
 import numpy as np
 from square import Square
-import random
 
 debruijn64 = np.uint64(0x03f79d71b4cb0a89);
 
@@ -25,6 +24,7 @@ def printBitBoard(bitboard):
   #bitobard as decimal number
   print(f"      Bitboard: {bitboard}\n")
 
+#one time use
 def printBitBoardForEnumList():
   for rank in range(8):
     for file in range(8):
@@ -37,11 +37,6 @@ def getBit(bitboard: np.uint64, square: Square) -> np.uint64:
 def setBit(bitboard: np.uint64, square: Square) -> np.uint64:
   bitboard |= square.toBitBoard()
   return bitboard
-
-# def popBit(bitboard: np.uint64, square: Square) -> np.uint64:
-#   if getBit(bitboard, square):
-#     bitboard ^= square.toBitBoard()
-#   return bitboard
 
 def clearBit(bitboard: np.uint64, square: Square) -> np.uint64:
   return bitboard & (~square.toBitBoard())
@@ -80,6 +75,13 @@ def getMsbIndex(bb: np.uint64):
     bb |= bb >> np.uint8(16)
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
+
+def countBits(bitboard: np.uint64) -> np.uint8:
+  count = np.uint8(0)
+  while(bitboard):
+    bitboard &= bitboard -1
+    count += 1
+  return count
 
 def setOccupancy(index: np.uint8, bits_in_mask: np.uint8, attack_mask: np.uint64):
 

@@ -16,10 +16,6 @@ sq3 = Square(Coordinate.a5)
 sq4 = Square(Coordinate.g5)
 sq5 = Square(Coordinate.e2)
 
-
-
-
-
 init_magic_numbers()
 # for i in range(4096):
   # printBitBoard(setOccupancy(i, countBits(maskBishopAttacks(sq1)),maskBishopAttacks(sq1)))

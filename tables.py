@@ -244,15 +244,6 @@ def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
 
   return attack
 
-def countBits(bitboard: np.uint64) -> np.uint8:
-  count = np.uint8(0)
-
-  while(bitboard):
-    bitboard &= bitboard -1
-    count += 1
-
-  return count
-
 
 
 #
