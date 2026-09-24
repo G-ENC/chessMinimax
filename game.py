@@ -18,10 +18,10 @@ class ChessBoard:
     self.cell_h = self.height/self.n
 
   def indexToScreenCoordinates(self, index):
-    row = index%8
-    column = index//8
-    x_co = row*self.cell_w + self.cell_w/2
-    y_co = column*self.cell_h + self.cell_h/2
+    row = index%8 
+    column = index//8 + 1
+    x_co = row*self.cell_w 
+    y_co = column*self.cell_h 
     return(x_co,y_co)
   
   def drawCheckerBoardPattern(self):
@@ -44,6 +44,7 @@ class ChessBoard:
       index = getLsbIndex(bitmap)
       
       coords = self.indexToScreenCoordinates(index)
+      image.get_rect().center = coords
       self.screen.blit(image, coords)
 
       bitmap = clearBit(bitmap, Square(index)) 
