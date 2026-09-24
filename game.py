@@ -2,9 +2,9 @@ from bitBoard import BitBoard
 import pygame
 
 
-class Piece:
+# class Piece:
 
-  def __init__(self):
+#   def __init__(self):
     
 
 class ChessBoard:

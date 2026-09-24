@@ -1,5 +1,5 @@
 from game import Game
 
 if __name__ == "__main__":
-  game = Game(1000,1000)
+  game = Game(800,800)
   game.initGame()
