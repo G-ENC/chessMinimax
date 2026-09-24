@@ -3,6 +3,7 @@ import pygame
 import numpy as np 
 from bitUtil import *
 from pieces import *
+from cosntants import * 
 
 class ChessBoard:
 
@@ -13,13 +14,19 @@ class ChessBoard:
     self.width = screen_w
     self.height = screen_h
     self.n = 8
-    self.pawn = Pawn()
     self.cell_w = self.width/self.n
     self.cell_h = self.height/self.n
 
+    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+    self.whiteKnight = Piece(Color.WHITE, 0x3300000000000000, "pieceImages/white")
+    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+
   def indexToScreenCoordinates(self, index):
     row = index%8 
-    column = index//8 + 1
+    column = index//8 
     x_co = row*self.cell_w 
     y_co = column*self.cell_h 
     return(x_co,y_co)
@@ -36,9 +43,9 @@ class ChessBoard:
           pygame.draw.rect(self.screen, (200,0,200), sq_rect)
         white = not white
 
-  def drawPiecesFromBitmap(self):
-    bitmap = self.pawn.bitmap
-    image = pygame.image.load(f"{self.pawn.filePath}").convert_alpha()
+  def drawPiecesFromBitmap(self, piece: Piece):
+    bitmap = piece.bitmap
+    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     while bitmap:
       index = getLsbIndex(bitmap)
@@ -47,7 +54,11 @@ class ChessBoard:
       image.get_rect().center = coords
       self.screen.blit(image, coords)
 
-      bitmap = clearBit(bitmap, Square(index)) 
+      bitmap = clearBit(bitmap, Square(index))
+  
+  def drawAllPieces(self):
+    self.drawPiecesFromBitmap(self.piece)
+    self.drawPiecesFromBitmap(self.piece)
     
 class Game:
   
@@ -61,8 +72,8 @@ class Game:
   def initGame(self):
 
     self.cb.drawCheckerBoardPattern()
-    self.cb.drawPiecesFromBitmap()
-    
+    self.cb.drawAllPieces()
+
     while self.run:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
