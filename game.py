@@ -4,6 +4,7 @@ import numpy as np
 from bitUtil import *
 from pieces import *
 from cosntants import * 
+from pieces import *
 
 class ChessBoard:
 
@@ -17,12 +18,12 @@ class ChessBoard:
     self.cell_w = self.width/self.n
     self.cell_h = self.height/self.n
 
-    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
-    self.whiteKnight = Piece(Color.WHITE, 0x3300000000000000, "pieceImages/white")
-    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
-    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
-    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
-    self.whitePawn = Piece(Color.WHITE, 0x00FF000000000000, "pieceImages/whitePawn")
+    self.whitePawn = Piece(Color.WHITE, np.uint64(0x00FF000000000000), "pieceImages/whitePawn.png")
+    self.whiteKnight = Piece(Color.WHITE, 0x4200000000000000, "pieceImages/whiteKnight.png")
+    self.whiteBishop = Piece(Color.WHITE, 0x2400000000000000, "pieceImages/whiteBishop.png")
+    self.whiteRook = Piece(Color.WHITE, 0x8100000000000000, "pieceImages/whiteRook.png")
+    self.whiteQueen = Piece(Color.WHITE, 0x0800000000000000, "pieceImages/whiteQueen.png")
+    self.whiteKing = Piece(Color.WHITE, 0x1000000000000000, "pieceImages/whiteKing.png")
 
   def indexToScreenCoordinates(self, index):
     row = index%8 
@@ -57,8 +58,12 @@ class ChessBoard:
       bitmap = clearBit(bitmap, Square(index))
   
   def drawAllPieces(self):
-    self.drawPiecesFromBitmap(self.piece)
-    self.drawPiecesFromBitmap(self.piece)
+    self.drawPiecesFromBitmap(self.whitePawn)
+    self.drawPiecesFromBitmap(self.whiteKnight)
+    self.drawPiecesFromBitmap(self.whiteBishop)
+    self.drawPiecesFromBitmap(self.whiteRook)
+    self.drawPiecesFromBitmap(self.whiteQueen)
+    self.drawPiecesFromBitmap(self.whiteKing)
     
 class Game:
   
