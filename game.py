@@ -24,6 +24,14 @@ class ChessBoard:
     self.whiteRook = Piece(Color.WHITE, 0x8100000000000000, "pieceImages/whiteRook.png")
     self.whiteQueen = Piece(Color.WHITE, 0x0800000000000000, "pieceImages/whiteQueen.png")
     self.whiteKing = Piece(Color.WHITE, 0x1000000000000000, "pieceImages/whiteKing.png")
+    
+    # self.blackPawn = Piece(Color.BLACK, np.uint64(0x00FF000000000000), "pieceImages/blackPawn.png")
+    # self.blackKnight = Piece(Color.BLACK, 0x4200000000000000, "pieceImages/blackKnight.png")
+    # self.blackBishop = Piece(Color.BLACK, 0x2400000000000000, "pieceImages/blackBishop.png")
+    # self.blackRook = Piece(Color.BLACK, 0x8100000000000000, "pieceImages/blackRook.png")
+    # self.blackQueen = Piece(Color.BLACK, 0x0800000000000000, "pieceImages/blackQueen.png")
+    # self.blackKing = Piece(Color.BLACK, 0x1000000000000000, "pieceImages/blackKing.png")
+
 
   def indexToScreenCoordinates(self, index):
     row = index%8 
@@ -49,14 +57,14 @@ class ChessBoard:
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     while bitmap:
-      index = getLsbIndex(bitmap)
-      
+      index = getLsbIndex(bitmap)      
       coords = self.indexToScreenCoordinates(index)
       image.get_rect().center = coords
       self.screen.blit(image, coords)
 
       bitmap = clearBit(bitmap, Square(index))
-  
+      pygame.draw.rect(self.screen,"green", image.get_rect(), 3)
+ 
   def drawAllPieces(self):
     self.drawPiecesFromBitmap(self.whitePawn)
     self.drawPiecesFromBitmap(self.whiteKnight)
@@ -66,7 +74,6 @@ class ChessBoard:
     self.drawPiecesFromBitmap(self.whiteKing)
     
 class Game:
-  
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
     pygame.init()
