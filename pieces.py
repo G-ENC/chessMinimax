@@ -7,5 +7,5 @@ class Piece:
     self.color= color
     self.bitmap = bitmap
     self.filePath = filePath
-
+  
   

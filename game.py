@@ -33,17 +33,17 @@ class ChessBoard:
     # self.blackKing = Piece(Color.BLACK, 0x1000000000000000, "pieceImages/blackKing.png")
 
 
-  def indexToScreenCoordinates(self, index):
+  def getIndexToScreenCoordinates(self, index):
     row = index%8 
     column = index//8 
     x_co = row*self.cell_w 
     y_co = column*self.cell_h 
     return(x_co,y_co)
 
-  def screenCoordinatesToIndex(self, coordinate:tuple):
-    rank = coordinate[1]//self.n 
-    file = coordinate[0]//self.n
-    return(rank*8+file)
+  def getScreenCoordinatesToIndex(self, coordinate:tuple):
+    rank = self.n-coordinate[1]//self.cell_h-1 #reverse order index aquired from per-cell width
+    file = coordinate[0]//self.cell_w 
+    return(rank*8+file) #return index for 64 bit number
   
   def drawCheckerBoardPattern(self):
     white = True
@@ -63,7 +63,7 @@ class ChessBoard:
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     while bitmap:
       index = getLsbIndex(bitmap)      
-      coords = self.indexToScreenCoordinates(index)
+      coords = self.getIndexToScreenCoordinates(index)
       image_rect = image.get_rect(topleft=coords)
       self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
@@ -77,7 +77,21 @@ class ChessBoard:
     self.drawPiecesFromBitmap(self.whiteQueen)
     self.drawPiecesFromBitmap(self.whiteKing)
 
-  
+  def holdSelectedPiece(self, index):
+    sq = Square(index)
+    
+    isEmpty = True
+    while isEmpty:
+      isEmpty = getBit(self.whitePawn.bitmap, sq)
+      isEmpty = getBit(self.whiteKnight.bitmap, sq)
+      isEmpty = getBit(self.whiteBishop.bitmap, sq)
+      isEmpty = getBit(self.whiteRook.bitmap, sq)
+      isEmpty = getBit(self.whiteQueen.bitmap, sq)
+      isEmpty = getBit(self.whiteKing.bitmap, sq)
+    
+    return(isEmpty)
+
+
 class Game:
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
@@ -98,8 +112,8 @@ class Game:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
-          print(mouse_location)
-          print(self.cb.screenCoordinatesToIndex(mouse_location))
+          selected_index = self.cb.getScreenCoordinatesToIndex(mouse_location)
+          print(self.cb.holdSelectedPiece(selected_index))
 
           
 
