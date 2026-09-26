@@ -39,6 +39,11 @@ class ChessBoard:
     x_co = row*self.cell_w 
     y_co = column*self.cell_h 
     return(x_co,y_co)
+
+  def screenCoordinatesToIndex(self, coordinate:tuple):
+    rank = coordinate[1]//self.n 
+    file = coordinate[0]//self.n
+    return(rank*8+file)
   
   def drawCheckerBoardPattern(self):
     white = True
@@ -63,9 +68,6 @@ class ChessBoard:
       self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
       pygame.draw.rect(self.screen,"green", image_rect, 3)
-
-
-  def draw
 
   def drawAllPieces(self):
     self.drawPiecesFromBitmap(self.whitePawn)
@@ -96,6 +98,8 @@ class Game:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
+          print(mouse_location)
+          print(self.cb.screenCoordinatesToIndex(mouse_location))
 
           
 
