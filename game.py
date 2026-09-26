@@ -59,12 +59,14 @@ class ChessBoard:
     while bitmap:
       index = getLsbIndex(bitmap)      
       coords = self.indexToScreenCoordinates(index)
-      image.get_rect().center = coords
-      self.screen.blit(image, coords)
-
+      image_rect = image.get_rect(topleft=coords)
+      self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
-      pygame.draw.rect(self.screen,"green", image.get_rect(), 3)
- 
+      pygame.draw.rect(self.screen,"green", image_rect, 3)
+
+
+  def draw
+
   def drawAllPieces(self):
     self.drawPiecesFromBitmap(self.whitePawn)
     self.drawPiecesFromBitmap(self.whiteKnight)
@@ -72,7 +74,8 @@ class ChessBoard:
     self.drawPiecesFromBitmap(self.whiteRook)
     self.drawPiecesFromBitmap(self.whiteQueen)
     self.drawPiecesFromBitmap(self.whiteKing)
-    
+
+  
 class Game:
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
@@ -90,6 +93,11 @@ class Game:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           self.run = False
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+          mouse_location = pygame.mouse.get_pos()
+
+          
 
       pygame.display.update()
     pygame.quit()
