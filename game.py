@@ -41,7 +41,7 @@ class ChessBoard:
     return(x_co,y_co)
 
   def getScreenCoordinatesToIndex(self, coordinate:tuple):
-    rank = self.n-coordinate[1]//self.cell_h-1 #reverse order index aquired from per-cell width
+    rank = coordinate[1]//self.cell_h 
     file = coordinate[0]//self.cell_w 
     return(rank*8+file) #return index for 64 bit number
   
@@ -79,19 +79,27 @@ class ChessBoard:
 
   def holdSelectedPiece(self, index):
     sq = Square(index)
-    
-    isEmpty = True
-    while isEmpty:
-      isEmpty = getBit(self.whitePawn.bitmap, sq)
-      isEmpty = getBit(self.whiteKnight.bitmap, sq)
-      isEmpty = getBit(self.whiteBishop.bitmap, sq)
-      isEmpty = getBit(self.whiteRook.bitmap, sq)
-      isEmpty = getBit(self.whiteQueen.bitmap, sq)
-      isEmpty = getBit(self.whiteKing.bitmap, sq)
-    
-    return(isEmpty)
 
+    sqTest = Square(55)
 
+    isFilled = 0
+
+    
+    if getBit(self.whitePawn.bitmap, sq):
+      print("p")
+     
+    if getBit(self.whiteBishop.bitmap, sq):
+      print("b")
+    if getBit(self.whiteKnight.bitmap, sq):
+      print("k")
+    if getBit(self.whiteRook.bitmap, sq):
+      print("R")
+    if getBit(self.whiteQueen.bitmap, sq):
+      print("Q")
+    if getBit(self.whiteKing.bitmap, sq):
+      print("K")
+
+  
 class Game:
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
@@ -99,22 +107,36 @@ class Game:
     self.screen = pygame.display.set_mode((screen_w, screen_h))
     self.clock = pygame.time.Clock()   
     self.cb = ChessBoard(screen_w,screen_h,self.screen)
+    self.update = True
+    self.fps = 120
 
   def initGame(self):
 
-    self.cb.drawCheckerBoardPattern()
-    self.cb.drawAllPieces()
+
 
     while self.run:
+
+      self.clock.tick(self.fps)
+      
+      coords = pygame.mouse.get_pos()
+        
+      pygame.draw.circle(self.screen,"red", coords, 10)
+
+      if self.update:
+        self.cb.drawCheckerBoardPattern()
+        self.cb.drawAllPieces()
+        self.update = False
+
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           self.run = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
-          selected_index = self.cb.getScreenCoordinatesToIndex(mouse_location)
-          print(self.cb.holdSelectedPiece(selected_index))
-
+          selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
+          self.cb.holdSelectedPiece(selected_index)
+          self.update = True
+      
           
 
       pygame.display.update()
