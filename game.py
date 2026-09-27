@@ -44,6 +44,8 @@ class ChessBoard:
     rank = coordinate[1]//self.cell_h 
     file = coordinate[0]//self.cell_w 
     return(rank*8+file) #return index for 64 bit number
+
+
   
   def drawCheckerBoardPattern(self):
     white = True
@@ -77,17 +79,16 @@ class ChessBoard:
     self.drawPiecesFromBitmap(self.whiteQueen)
     self.drawPiecesFromBitmap(self.whiteKing)
 
-  def holdSelectedPiece(self, index):
+  def popSelectedPiece(self, index):
     sq = Square(index)
-
-    sqTest = Square(55)
-
-    isFilled = 0
-
     
     if getBit(self.whitePawn.bitmap, sq):
-      print("p")
-     
+      clearBit(self.whitePawn.bitmap,sq)
+      image = pygame.image.load(f"{self.whitePawn.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+
+      return image
+
     if getBit(self.whiteBishop.bitmap, sq):
       print("b")
     if getBit(self.whiteKnight.bitmap, sq):
@@ -109,6 +110,7 @@ class Game:
     self.cb = ChessBoard(screen_w,screen_h,self.screen)
     self.update = True
     self.fps = 120
+    self.holdPieceImage = None
 
   def initGame(self):
 
@@ -119,13 +121,21 @@ class Game:
       self.clock.tick(self.fps)
       
 
-      # self.update = True
-      # if self.update:
+      if self.holdPieceImage != None:
         
-      self.cb.drawCheckerBoardPattern()
-      self.cb.drawAllPieces()
-      coords = pygame.mouse.get_pos()
-      pygame.draw.circle(self.screen,"red", coords, 10)
+        m_pos = pygame.mouse.get_pos()
+        image_rect = self.holdPieceImage.get_rect(topleft=m_pos)
+        self.screen.blit(self.holdPieceImage, image_rect)
+        pygame.draw.rect(self.screen,"green", image_rect, 3)
+        
+
+      # self.update = True
+      if self.update:
+        self.cb.drawCheckerBoardPattern()
+        self.cb.drawAllPieces()
+        self.update = False
+      
+      
         # self.update = False
 
       for event in pygame.event.get():
@@ -135,9 +145,11 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-          self.cb.holdSelectedPiece(selected_index)
+          self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
+          
           self.update = True
-      
+
+
           
 
       pygame.display.update()
