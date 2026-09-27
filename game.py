@@ -45,8 +45,6 @@ class ChessBoard:
     file = coordinate[0]//self.cell_w 
     return(rank*8+file) #return index for 64 bit number
 
-
-  
   def drawCheckerBoardPattern(self):
     white = True
     for column in range(self.n):
@@ -64,12 +62,12 @@ class ChessBoard:
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     while bitmap:
-      index = getLsbIndex(bitmap)      
+      index = getLsbIndex(bitmap)     
       coords = self.getIndexToScreenCoordinates(index)
       image_rect = image.get_rect(topleft=coords)
       self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
-      pygame.draw.rect(self.screen,"green", image_rect, 3)
+      # pygame.draw.rect(self.screen,"green", image_rect, 3)
 
   def drawAllPieces(self):
     self.drawPiecesFromBitmap(self.whitePawn)
@@ -81,12 +79,11 @@ class ChessBoard:
 
   def popSelectedPiece(self, index):
     sq = Square(index)
-    
+
     if getBit(self.whitePawn.bitmap, sq):
       clearBit(self.whitePawn.bitmap,sq)
       image = pygame.image.load(f"{self.whitePawn.filePath}").convert_alpha()
       image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-
       return image
 
     if getBit(self.whiteBishop.bitmap, sq):
@@ -109,48 +106,44 @@ class Game:
     self.clock = pygame.time.Clock()   
     self.cb = ChessBoard(screen_w,screen_h,self.screen)
     self.update = True
-    self.fps = 120
+    self.fps = 60
     self.holdPieceImage = None
-
+    self.timer = 0
   def initGame(self):
 
-
+    
 
     while self.run:
 
-      self.clock.tick(self.fps)
       
 
-      if self.holdPieceImage != None:
-        
-        m_pos = pygame.mouse.get_pos()
-        image_rect = self.holdPieceImage.get_rect(topleft=m_pos)
-        self.screen.blit(self.holdPieceImage, image_rect)
-        pygame.draw.rect(self.screen,"green", image_rect, 3)
-        
-
-      # self.update = True
-      if self.update:
-        self.cb.drawCheckerBoardPattern()
-        self.cb.drawAllPieces()
-        self.update = False
-      
-      
-        # self.update = False
 
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           self.run = False
 
+        elif event.type == pygame.MOUSEMOTION:  
+          self.update = True
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
           self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
-          
           self.update = True
 
 
-          
+      if self.update:
+        self.cb.drawCheckerBoardPattern()
+        self.cb.drawAllPieces()
+        if self.holdPieceImage != None:
+          m_pos = pygame.mouse.get_pos()
+          image_rect = self.holdPieceImage.get_rect(center=m_pos)
+          self.screen.blit(self.holdPieceImage, image_rect)
+
+        
+        self.update = False
+      
+   
 
       pygame.display.update()
     pygame.quit()
