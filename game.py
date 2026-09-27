@@ -79,23 +79,42 @@ class ChessBoard:
 
   def popSelectedPiece(self, index):
     sq = Square(index)
+    image = None
 
-    if getBit(self.whitePawn.bitmap, sq):
-      clearBit(self.whitePawn.bitmap,sq)
-      image = pygame.image.load(f"{self.whitePawn.filePath}").convert_alpha()
+    #I am so sorry idk how to abstract 
+    def thinkOfAName(piece:Piece, index):
+      sq = Square(index)
+      piece.bitmap = clearBit(piece.bitmap,sq)
+      image = pygame.image.load(f"{piece.filePath}").convert_alpha()
       image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
       return image
 
+    if getBit(self.whitePawn.bitmap, sq):
+      return thinkOfAName(self.whitePawn, sq.index)
+
+    #look ma if statements!
     if getBit(self.whiteBishop.bitmap, sq):
-      print("b")
+      self.whiteBishop.bitmap = clearBit(self.whiteBishop.bitmap,sq)
+      image = pygame.image.load(f"{self.whiteBishop.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     if getBit(self.whiteKnight.bitmap, sq):
-      print("k")
+      self.whiteKnight.bitmap = clearBit(self.whiteKnight.bitmap,sq)
+      image = pygame.image.load(f"{self.whiteKnight.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     if getBit(self.whiteRook.bitmap, sq):
-      print("R")
+      self.whiteRook.bitmap = clearBit(self.whiteRook.bitmap,sq)
+      image = pygame.image.load(f"{self.whiteRook.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     if getBit(self.whiteQueen.bitmap, sq):
-      print("Q")
+      self.whiteQueen.bitmap = clearBit(self.whiteQueen.bitmap,sq)
+      image = pygame.image.load(f"{self.whiteQueen.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     if getBit(self.whiteKing.bitmap, sq):
-      print("K")
+      self.whiteKing.bitmap = clearBit(self.whiteKing.bitmap,sq)
+      image = pygame.image.load(f"{self.whiteKing.filePath}").convert_alpha()
+      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+
+    return image
 
   
 class Game:
@@ -135,11 +154,11 @@ class Game:
       if self.update:
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
+
         if self.holdPieceImage != None:
           m_pos = pygame.mouse.get_pos()
           image_rect = self.holdPieceImage.get_rect(center=m_pos)
           self.screen.blit(self.holdPieceImage, image_rect)
-
         
         self.update = False
       
