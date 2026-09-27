@@ -118,14 +118,15 @@ class Game:
 
       self.clock.tick(self.fps)
       
-      coords = pygame.mouse.get_pos()
-        
-      pygame.draw.circle(self.screen,"red", coords, 10)
 
-      if self.update:
-        self.cb.drawCheckerBoardPattern()
-        self.cb.drawAllPieces()
-        self.update = False
+      # self.update = True
+      # if self.update:
+        
+      self.cb.drawCheckerBoardPattern()
+      self.cb.drawAllPieces()
+      coords = pygame.mouse.get_pos()
+      pygame.draw.circle(self.screen,"red", coords, 10)
+        # self.update = False
 
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
