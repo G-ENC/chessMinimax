@@ -82,34 +82,16 @@ class ChessBoard:
   def getObjectByIndex(self, index):
     sq = Square(index)
     for i in range(len(self.allPieces)):
-      if getBit(piece.bitmap, sq):
-      
-        image = getImageByIndex(self.allPieces[i], index) 
-      if image != None :
-        return image
-      
-      piece.bitmap = clearBit(piece.bitmap,sq)
-      return self.getPieceImage(piece)
-    else:
-      return None
+      if getBit(self.allPieces[i].bitmap, sq):
+        return self.allPieces[i]
 
-  def popSelectedPiece(self, index):
-    image = None
+  def popAndGetSelectedPiece(self, index):
 
-    def getImageByIndex(piece:Piece, index):
-      sq = Square(index)
-      if getBit(piece.bitmap, sq):
-        piece.bitmap = clearBit(piece.bitmap,sq)
-        return self.getPieceImage(piece)
-      else:
-        return None
-    
-    for i in range(len(self.allPieces)):
-      image = getImageByIndex(self.allPieces[i], index) 
-      if image != None :
-        return image
-      
-    return image
+    pieceObject = self.getObjectByIndex(index)
+    pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
+
+    return pieceObject 
+
 
   def putPieceToSquare(piece:Piece, index):
 
@@ -143,7 +125,7 @@ class Game:
           if self.holdPieceImage == None:
             mouse_location = pygame.mouse.get_pos()
             selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-            self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
+            self.holdPieceImage = self.cb.getPieceImage(self.cb.popAndGetSelectedPiece(selected_index))
             self.update = True
           # else:
             # self.
