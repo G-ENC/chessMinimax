@@ -25,7 +25,6 @@ BISHOP_INDEX_BITS = [
     6, 5, 5, 5, 5, 5, 5, 6
 ]
 
-
 def findMagicNumber(square, relevant_bits, bishop_flag):
     relevant_bits = int(relevant_bits)
     attack_mask = maskBishopAttacks(square) if bishop_flag else maskRookAttacks(square)

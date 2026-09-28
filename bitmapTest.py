@@ -5,9 +5,6 @@ from tables import *
 from randomUtil import *
 from magicBitBoard import *
 
-
-
-
 empty_bb = np.uint64(0)
 
 sq1 = Square(Coordinate.e5)

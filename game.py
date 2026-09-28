@@ -100,7 +100,7 @@ class ChessBoard:
 
 
 class Game:
-  def __init__(self,screen_w=800, screen_h=800):
+  def __init__(self,screen_w=800,screen_h=800):
     self.run = True
     pygame.init()
     self.screen = pygame.display.set_mode((screen_w, screen_h))
