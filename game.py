@@ -93,9 +93,10 @@ class ChessBoard:
     return pieceObject 
 
 
-  def putPieceToSquare(piece:Piece, index):
+  def putPieceToSquare(self, piece:Piece, index):
 
-    setBit(piece.bitmap, Square(index))
+    piece.bitmap = setBit(piece.bitmap, Square(index))
+
 
 class Game:
   def __init__(self,screen_w=800, screen_h=800):
@@ -122,13 +123,14 @@ class Game:
 
         #hold the piece if not holding already
         elif event.type == pygame.MOUSEBUTTONDOWN:
-          if self.holdPiece == None:
-            mouse_location = pygame.mouse.get_pos()
-            selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-            self.holdPiece = self.cb.getPieceImage(self.cb.popAndGetSelectedPiece(selected_index))
+          mouse_location = pygame.mouse.get_pos()
+          selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
+          if self.holdPiece == None:  
+            self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
             self.update = True
-          # else:
-            # self.
+          else:
+            self.cb.putPieceToSquare(self.holdPiece,selected_index)
+            self.holdPiece = None
 
       #update screen
       if self.update:
