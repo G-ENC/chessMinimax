@@ -88,7 +88,8 @@ class ChessBoard:
   def popAndGetSelectedPiece(self, index):
 
     pieceObject = self.getObjectByIndex(index)
-    pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
+    if pieceObject:
+      pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
 
     return pieceObject 
 
