@@ -97,7 +97,7 @@ class ChessBoard:
     # getImageByIndex()
 
     if getBit(self.whitePawn.bitmap, sq):
-      return getPieceImage(self.whitePawn, sq.index)
+      return getPieceImage(self.whitePawn)
 
     #look ma if statements!
     if getBit(self.whiteBishop.bitmap, sq):
