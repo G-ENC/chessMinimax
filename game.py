@@ -84,42 +84,47 @@ class ChessBoard:
       image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
       return image
 
-    # def getImageByIndex(piece:Piece, index):
-    #   sq = Square(index)
-    #   if getBit(piece.bitmap, sq):
-    #     return getPieceImage(piece)
-    #   else:
-    #     return None
+    def getImageByIndex(piece:Piece, index):
+      sq = Square(index)
+      if getBit(piece.bitmap, sq):
+        return getPieceImage(piece)
+      else:
+        return None
+    
+    for i in range(len(self.allPieces)):
+      image = getImageByIndex(self.allPieces[i], index) 
+      if image != None :
+        return image
 
     
     #I am so sorry idk how to abstract 
     
     # getImageByIndex()
 
-    if getBit(self.whitePawn.bitmap, sq):
-      return getPieceImage(self.whitePawn)
+    # if getBit(self.whitePawn.bitmap, sq):
+    #   return getPieceImage(self.whitePawn)
 
-    #look ma if statements!
-    if getBit(self.whiteBishop.bitmap, sq):
-      self.whiteBishop.bitmap = clearBit(self.whiteBishop.bitmap,sq)
-      image = pygame.image.load(f"{self.whiteBishop.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    if getBit(self.whiteKnight.bitmap, sq):
-      self.whiteKnight.bitmap = clearBit(self.whiteKnight.bitmap,sq)
-      image = pygame.image.load(f"{self.whiteKnight.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    if getBit(self.whiteRook.bitmap, sq):
-      self.whiteRook.bitmap = clearBit(self.whiteRook.bitmap,sq)
-      image = pygame.image.load(f"{self.whiteRook.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    if getBit(self.whiteQueen.bitmap, sq):
-      self.whiteQueen.bitmap = clearBit(self.whiteQueen.bitmap,sq)
-      image = pygame.image.load(f"{self.whiteQueen.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    if getBit(self.whiteKing.bitmap, sq):
-      self.whiteKing.bitmap = clearBit(self.whiteKing.bitmap,sq)
-      image = pygame.image.load(f"{self.whiteKing.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    # #look ma if statements!
+    # if getBit(self.whiteBishop.bitmap, sq):
+    #   self.whiteBishop.bitmap = clearBit(self.whiteBishop.bitmap,sq)
+    #   image = pygame.image.load(f"{self.whiteBishop.filePath}").convert_alpha()
+    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    # if getBit(self.whiteKnight.bitmap, sq):
+    #   self.whiteKnight.bitmap = clearBit(self.whiteKnight.bitmap,sq)
+    #   image = pygame.image.load(f"{self.whiteKnight.filePath}").convert_alpha()
+    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    # if getBit(self.whiteRook.bitmap, sq):
+    #   self.whiteRook.bitmap = clearBit(self.whiteRook.bitmap,sq)
+    #   image = pygame.image.load(f"{self.whiteRook.filePath}").convert_alpha()
+    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    # if getBit(self.whiteQueen.bitmap, sq):
+    #   self.whiteQueen.bitmap = clearBit(self.whiteQueen.bitmap,sq)
+    #   image = pygame.image.load(f"{self.whiteQueen.filePath}").convert_alpha()
+    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    # if getBit(self.whiteKing.bitmap, sq):
+    #   self.whiteKing.bitmap = clearBit(self.whiteKing.bitmap,sq)
+    #   image = pygame.image.load(f"{self.whiteKing.filePath}").convert_alpha()
+    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
 
 
       
