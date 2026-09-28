@@ -106,7 +106,7 @@ class Game:
     self.cb = ChessBoard(screen_w,screen_h,self.screen)
     self.update = True
     self.fps = 60
-    self.holdPieceImage = None
+    self.holdPiece = None
     self.timer = 0
 
   def initGame(self):
@@ -122,10 +122,10 @@ class Game:
 
         #hold the piece if not holding already
         elif event.type == pygame.MOUSEBUTTONDOWN:
-          if self.holdPieceImage == None:
+          if self.holdPiece == None:
             mouse_location = pygame.mouse.get_pos()
             selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-            self.holdPieceImage = self.cb.getPieceImage(self.cb.popAndGetSelectedPiece(selected_index))
+            self.holdPiece = self.cb.getPieceImage(self.cb.popAndGetSelectedPiece(selected_index))
             self.update = True
           # else:
             # self.
@@ -135,11 +135,11 @@ class Game:
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 
-        if self.holdPieceImage != None:
-          
+        if self.holdPiece != None:
+          holdPieceImage = self.cb.getPieceImage(self.holdPiece)
           m_pos = pygame.mouse.get_pos()
-          image_rect = self.holdPieceImage.get_rect(center=m_pos)
-          self.screen.blit(self.holdPieceImage, image_rect)
+          image_rect = holdPieceImage.get_rect(center=m_pos)
+          self.screen.blit(holdPieceImage, image_rect)
         
         self.update = False
       
