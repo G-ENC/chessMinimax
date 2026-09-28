@@ -74,20 +74,33 @@ class ChessBoard:
     for i  in range(len(self.allPieces)):
       self.drawPiecesFromBitmap(self.allPieces[i])
 
-  def popSelectedPiece(self, index):
-    sq = Square(index)
-    image = None
+  def getPieceImage(self,piece:Piece):
+    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
+    image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
+    return image
 
-    def getPieceImage(piece:Piece):
+  def getObjectByIndex(self, index):
+    sq = Square(index)
+    for i in range(len(self.allPieces)):
+      if getBit(piece.bitmap, sq):
+      
+        image = getImageByIndex(self.allPieces[i], index) 
+      if image != None :
+        return image
+      
       piece.bitmap = clearBit(piece.bitmap,sq)
-      image = pygame.image.load(f"{piece.filePath}").convert_alpha()
-      image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-      return image
+      return self.getPieceImage(piece)
+    else:
+      return None
+
+  def popSelectedPiece(self, index):
+    image = None
 
     def getImageByIndex(piece:Piece, index):
       sq = Square(index)
       if getBit(piece.bitmap, sq):
-        return getPieceImage(piece)
+        piece.bitmap = clearBit(piece.bitmap,sq)
+        return self.getPieceImage(piece)
       else:
         return None
     
@@ -98,7 +111,10 @@ class ChessBoard:
       
     return image
 
-  
+  def putPieceToSquare(piece:Piece, index):
+
+    setBit(piece.bitmap, Square(index))
+
 class Game:
   def __init__(self,screen_w=800, screen_h=800):
     self.run = True
@@ -122,12 +138,15 @@ class Game:
         elif event.type == pygame.MOUSEMOTION:  
           self.update = True
 
+        #hold the piece if not holding already
         elif event.type == pygame.MOUSEBUTTONDOWN:
           if self.holdPieceImage == None:
             mouse_location = pygame.mouse.get_pos()
             selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
             self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
             self.update = True
+          # else:
+            # self.
 
       #update screen
       if self.update:
