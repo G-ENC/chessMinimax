@@ -95,38 +95,6 @@ class ChessBoard:
       image = getImageByIndex(self.allPieces[i], index) 
       if image != None :
         return image
-
-    
-    #I am so sorry idk how to abstract 
-    
-    # getImageByIndex()
-
-    # if getBit(self.whitePawn.bitmap, sq):
-    #   return getPieceImage(self.whitePawn)
-
-    # #look ma if statements!
-    # if getBit(self.whiteBishop.bitmap, sq):
-    #   self.whiteBishop.bitmap = clearBit(self.whiteBishop.bitmap,sq)
-    #   image = pygame.image.load(f"{self.whiteBishop.filePath}").convert_alpha()
-    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    # if getBit(self.whiteKnight.bitmap, sq):
-    #   self.whiteKnight.bitmap = clearBit(self.whiteKnight.bitmap,sq)
-    #   image = pygame.image.load(f"{self.whiteKnight.filePath}").convert_alpha()
-    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    # if getBit(self.whiteRook.bitmap, sq):
-    #   self.whiteRook.bitmap = clearBit(self.whiteRook.bitmap,sq)
-    #   image = pygame.image.load(f"{self.whiteRook.filePath}").convert_alpha()
-    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    # if getBit(self.whiteQueen.bitmap, sq):
-    #   self.whiteQueen.bitmap = clearBit(self.whiteQueen.bitmap,sq)
-    #   image = pygame.image.load(f"{self.whiteQueen.filePath}").convert_alpha()
-    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    # if getBit(self.whiteKing.bitmap, sq):
-    #   self.whiteKing.bitmap = clearBit(self.whiteKing.bitmap,sq)
-    #   image = pygame.image.load(f"{self.whiteKing.filePath}").convert_alpha()
-    #   image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-
-
       
     return image
 
@@ -142,34 +110,32 @@ class Game:
     self.fps = 60
     self.holdPieceImage = None
     self.timer = 0
+
   def initGame(self):
 
-    
-
     while self.run:
-
-      
-
-
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           self.run = False
 
+        #update the screen so that the piece follows the cursor
         elif event.type == pygame.MOUSEMOTION:  
           self.update = True
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-          mouse_location = pygame.mouse.get_pos()
-          selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-          self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
-          self.update = True
+          if self.holdPieceImage == None:
+            mouse_location = pygame.mouse.get_pos()
+            selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
+            self.holdPieceImage = self.cb.popSelectedPiece(selected_index)
+            self.update = True
 
-
+      #update screen
       if self.update:
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 
         if self.holdPieceImage != None:
+          
           m_pos = pygame.mouse.get_pos()
           image_rect = self.holdPieceImage.get_rect(center=m_pos)
           self.screen.blit(self.holdPieceImage, image_rect)
