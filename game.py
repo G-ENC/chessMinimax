@@ -68,7 +68,6 @@ class ChessBoard:
       image_rect = image.get_rect(topleft=coords)
       self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
-      # pygame.draw.rect(self.screen,"green", image_rect, 3)
 
   def drawAllPieces(self):
     for i  in range(len(self.allPieces)):
@@ -86,7 +85,6 @@ class ChessBoard:
         return self.allPieces[i]
 
   def popAndGetSelectedPiece(self, index):
-
     pieceObject = self.getObjectByIndex(index)
     if pieceObject:
       pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
@@ -95,7 +93,6 @@ class ChessBoard:
 
 
   def putPieceToSquare(self, piece:Piece, index):
-
     piece.bitmap = setBit(piece.bitmap, Square(index))
 
 
