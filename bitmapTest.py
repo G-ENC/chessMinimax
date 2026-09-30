@@ -12,6 +12,7 @@ sq2 = Square(Coordinate.e6)
 sq3 = Square(Coordinate.a5)
 sq4 = Square(Coordinate.g5)
 sq5 = Square(Coordinate.e2)
+sq6 = Square(Coordinate.d4)
 
 init_magic_numbers()
 # for i in range(4096):
@@ -33,3 +34,6 @@ init_magic_numbers()
 
 # print("==============g file==============")
 # printBitBoard(empty_bb)
+initALL()
+occupancy = np.uint64()    
+printBitBoard(get_bishop_attacks(sq6,occupancy))

@@ -2,6 +2,8 @@ from cosntants import *
 import numpy as np
 from square import Square
 from bitUtil import *
+from magicBitBoard import *
+from cosntants import *
 
 FILE_A = np.uint64(72340172838076673)
 FILE_B = np.uint64(144680345676153346)
@@ -38,10 +40,8 @@ def maskPawnAttacks(color:Color, square: Square) -> np.uint64:
     #black pawn at right most square can go to left diagonal
     attacks |= (square.toBitBoard() & ~FILE_H) << np.uint8(9)
   return attacks
-
 PAWN_ATTACKS = np.fromiter((maskPawnAttacks(color, square) for (color, square) in SQUARE_ITTER_COLOR), dtype=np.uint64, count=2*64)
 PAWN_ATTACKS.shape = (2,64)
-
 def maskKinghtAttacks(square: Square) -> np.uint64:
   attack = np.uint64(0)
 
@@ -66,9 +66,7 @@ def maskKinghtAttacks(square: Square) -> np.uint64:
   attack = upper_right_top|upper_right_under|upper_left_top|upper_left_under|lower_left_under|lower_left_top|lower_right_under|lower_right_top
 
   return attack
-
 KNIGHT_ATTACKS = np.fromiter((maskKinghtAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64, count=64)
-
 def maskKingAttacks(square: Square) -> np.uint64:
   attack = np.uint64(0)
 
@@ -86,9 +84,7 @@ def maskKingAttacks(square: Square) -> np.uint64:
   attack |= lower_right | lower_center | lower_left | center_right | center_left | upper_right | uppper_center | upper_left
 
   return attack 
-
 KING_ATTACKS = np.fromiter((maskKingAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64, count=64)
-
 def maskBishopAttacks(square: Square) -> np.uint64:
   attack = np.uint64(0)
 
@@ -123,9 +119,6 @@ def maskBishopAttacks(square: Square) -> np.uint64:
     rank -= 1
     attack |= np.uint64(1)<<np.uint8(rank*8+file) 
   return attack
-
-BISHOP_ATTACKS = np.fromiter((maskBishopAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64(), count=64)
-
 def maskRookAttacks(square: Square) -> np.uint64:
   attack = np.uint64(0)
 
@@ -156,10 +149,6 @@ def maskRookAttacks(square: Square) -> np.uint64:
     rank -= 1
     attack |= np.uint64(1)<<np.uint8(rank*8+file) 
   return attack
-
-
-ROOK_ATTACKS = np.fromiter((maskRookAttacks(square) for square in SQUARE_ITTER_NO_COLOR), dtype=np.uint64(), count=64)
-
 def maskBishopAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
   attack = np.uint64(0)
 
@@ -203,7 +192,6 @@ def maskBishopAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
       break
 
   return attack
-
 def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
   attack = np.uint64(0)
 
@@ -243,9 +231,52 @@ def maskRookAttacksWithBlocker(square: Square, block:np.uint64) -> np.uint64:
       break
 
   return attack
+BISHOP_MASK = np.array(64,np.uint64)
+BISHOP_ATTACK = np.array((64,512), dtype=np.uint64)
+ROOK_MASK = np.array(64,np.uint64)
+ROOK_ATTACK = np.array((64,4096), dtype=np.uint64)
+def init_leapers_attacks():
+  for sq in range(64):
+    square = Square(sq)
+    PAWN_ATTACKS[Color.WHITE][square] = maskPawnAttacks(Color.WHITE,square)
+    PAWN_ATTACKS[Color.BLACK][square] = maskPawnAttacks(Color.BLACK,square)
+    KNIGHT_ATTACKS[square] = maskKinghtAttacks(square)
+    KING_ATTACKS[square] = maskKingAttacks(square)
+def init_sliders_attacks(bishop:bool):
+  for sq in range(64):
+    square = Square(sq)
+    BISHOP_MASK = maskBishopAttacks(square)
+    ROOK_MASK = maskRookAttacks(square)
+    attack_mask = BISHOP_MASK[square] if bishop else ROOK_MASK[square]
+    relevant_bits_count = countBits(attack_mask)
+    occupancy_indicies = (1<<relevant_bits_count)
+    for index in range(occupancy_indicies):
+      if bishop:
+        occupancy = setOccupancy(index, relevant_bits_count, attack_mask)
+        magic_index = (occupancy*bishop_magic_numbers[square])>>(64-BISHOP_INDEX_BITS)
+        BISHOP_ATTACK[square][magic_index] = maskBishopAttacksWithBlocker(square, occupancy)
+      else:
+        occupancy = setOccupancy(index, relevant_bits_count, attack_mask)
+        magic_index = (occupancy*rook_magic_numbers[square])>>(64-ROOK_INDEX_BITS)
+        ROOK_ATTACK[square][magic_index] = maskRookAttacksWithBlocker(square, occupancy)
+def get_bishop_attacks(square:Square, occupancy:np.uint64):
+  occupancy &= BISHOP_MASK[square]
+  occupancy *= bishop_magic_numbers[square]
+  occupancy >>= 64 - BISHOP_INDEX_BITS[square]
 
+  return BISHOP_ATTACK[square][occupancy]
+def get_rook_attacks(square:Square, occupancy:np.uint64):
+  occupancy &= ROOK_MASK[square]
+  occupancy *= rook_magic_numbers[square]
+  occupancy >>= 64 - ROOK_INDEX_BITS[square]
 
+  return ROOK_ATTACK[square][occupancy]
 
+def initALL():
+  init_leapers_attacks()
+
+  init_sliders_attacks(1)
+  init_sliders_attacks(0)
 #
   # =======A FILE=========    
   # 8   1 0 0 0 0 0 0 0 

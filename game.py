@@ -5,6 +5,7 @@ from bitUtil import *
 from pieces import *
 from cosntants import * 
 from pieces import *
+from tables import *
 
 class ChessBoard:
 
@@ -34,6 +35,7 @@ class ChessBoard:
 
     self.allPieces = [self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing,self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]
 
+    
   def getIndexToScreenCoordinates(self, index):
     row = index%8 
     column = index//8 
@@ -110,6 +112,8 @@ class Game:
 
   def initGame(self):
 
+    initALL()
+
     while self.run:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -125,13 +129,15 @@ class Game:
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
           if self.holdPiece == None:  
             self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
-            self.update = True
           else:
             self.cb.putPieceToSquare(self.holdPiece,selected_index)
             self.holdPiece = None
+          self.update = True
+
 
       #update screen
       if self.update:
+        printBitBoard(self.cb.whitePawn.bitmap)
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 

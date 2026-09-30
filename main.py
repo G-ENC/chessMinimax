@@ -1,7 +1,7 @@
 from game import Game
 
 #change screen dimentions based on personal computers
-linux = True
+linux = False
 dim = (1000,1000)
 if not linux:
   dim = (600,600)

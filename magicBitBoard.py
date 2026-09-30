@@ -2,6 +2,7 @@ import numpy as np
 from square import Square
 from tables import *
 from randomUtil import *
+from bitUtil import *
 
 ROOK_INDEX_BITS = [
     12, 11, 11, 11, 11, 11, 11, 12,
