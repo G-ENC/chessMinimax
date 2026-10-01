@@ -1,8 +1,8 @@
 import numpy as np
 from cosntants import *
 from bitUtil import *
-from magicBitBoard import rook_magic_numbers, bishop_magic_numbers
 from tables import *
+from magicBitBoard import rook_magic_numbers, bishop_magic_numbers
 
 class BitBoard:
   def __init__(self, ):

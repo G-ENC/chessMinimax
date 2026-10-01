@@ -8,13 +8,13 @@ from magicBitBoard import *
 empty_bb = np.uint64(0)
 
 sq1 = Square(Coordinate.e5)
-sq2 = Square(Coordinate.e6)
-sq3 = Square(Coordinate.a5)
-sq4 = Square(Coordinate.g5)
+sq2 = Square(Coordinate.f6)
+sq3 = Square(Coordinate.g1)
+sq4 = Square(Coordinate.b6)
 sq5 = Square(Coordinate.e2)
 sq6 = Square(Coordinate.d4)
 
-init_magic_numbers()
+
 # for i in range(4096):
   # printBitBoard(setOccupancy(i, countBits(maskBishopAttacks(sq1)),maskBishopAttacks(sq1)))
 #   printBitBoard(generateMagicNumber())
@@ -35,5 +35,9 @@ init_magic_numbers()
 # print("==============g file==============")
 # printBitBoard(empty_bb)
 initALL()
-occupancy = np.uint64()    
+occupancy = np.uint64(0)
+occupancy = setBit(occupancy,sq2) 
+occupancy = setBit(occupancy,sq3) 
+occupancy = setBit(occupancy,sq4) 
+printBitBoard(occupancy)
 printBitBoard(get_bishop_attacks(sq6,occupancy))

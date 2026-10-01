@@ -65,7 +65,7 @@ ms1bTable = np.array(
    13, 18,  8, 12,  7,  6,  5, 63], 
    dtype=np.uint8)
 
-def getLsbIndex(bb: np.uint64) -> np.uint8:
+def getLsbIndex(bb: np.uint64) -> np.uint64:
     return ls1bTable[((bb&-bb) *debruijn64)>>np.uint8(58)]
 
 def getMsbIndex(bb: np.uint64):
@@ -78,10 +78,10 @@ def getMsbIndex(bb: np.uint64):
     bb |= bb >> np.uint8(32)
     return ms1bTable[(bb * debruijn64) >> np.uint8(58)]
 
-def countBits(bitboard: np.uint64) -> np.uint8:
-  count = np.uint8(0)
+def countBits(bitboard: np.uint64) -> int:
+  count = 0
   while(bitboard):
-    bitboard &= bitboard -1
+    bitboard &= bitboard - np.uint64(1)
     count += 1
   return count
 
