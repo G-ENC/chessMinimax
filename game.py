@@ -35,6 +35,11 @@ class ChessBoard:
 
     self.allPieces = [self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing,self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]
 
+    self.piece_bit_board = np.zeros((2,6),dtype=np.uint64)
+    self.occupancy = np.zeros(3, dtype=np.uint64)
+    self.side = -1
+    self.enpassant = Coordinate.no_sq
+    self.castle = 0
     
   def getIndexToScreenCoordinates(self, index):
     row = index%8 
