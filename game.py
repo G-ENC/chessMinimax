@@ -161,6 +161,7 @@ class ChessBoard:
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
     return image
 
+  #loops over the piece array and finds the matching piece that occupies the selected square
   def getObjectByIndex(self, index):
     sq = Square(index)
     for side in range(2):
@@ -168,6 +169,7 @@ class ChessBoard:
         if getBit(self.allPieces[side][piece].bitmap, sq):
           return self.allPieces[side][piece]
 
+  #loops over the piece array, clears that bit from selected index and returns that piece object 
   def popAndGetSelectedPiece(self, index):
     pieceObject = self.getObjectByIndex(index)
     if pieceObject:
@@ -217,15 +219,20 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-          self.holdPieceIndex = selected_index 
 
+          #this check is for to make sure only the player with their turn is playing that round
+          #if self.cb.getObjectByIndex(selected_index) == self.cb.side
+          
           if self.holdPiece == None:
+            print(self.cb.getObjectByIndex(selected_index))
+            self.holdPieceIndex = selected_index
             self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
           else:
-            self.cb.putPieceToSquare(self.holdPiece,selected_index)
-            self.holdPiece = None
-          self.update = True
-
+            if self.holdPieceIndex != selected_index:
+              self.cb.putPieceToSquare(self.holdPiece,selected_index)
+              self.holdPiece = None
+              self.cb.nextPlayerTurn()
+            print(self.cb.side)
 
       #update screen
       if self.update:

@@ -8,5 +8,8 @@ class Piece:
     self.bitmap = bitmap
     self.filePath = filePath
     self.type = pieceType
+
+  def __str__(self):
+    return f"{self.color.name} {self.type}"
   
   
