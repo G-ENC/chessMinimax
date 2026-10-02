@@ -273,6 +273,26 @@ def get_rook_attacks(square:Square, occupancy:np.uint64):
 
   return ROOK_ATTACK[square.index][occupancy]
 
+def get_queen_attacks(square:Square, occupany:np.uint64):
+  queen_attack = np.uint64(0)
+
+  bishop_occ = occupany
+
+  rook_occ = occupany
+
+  bishop_occ &= BISHOP_MASK[square.index]
+  bishop_occ *= bishop_magic_numbers[square.index]
+  bishop_occ >>= 64 - BISHOP_INDEX_BITS[square.index]
+
+  rook_occ &= ROOK_MASK[square.index]
+  rook_occ *= rook_magic_numbers[square.index]
+  rook_occ >>= 64 - ROOK_INDEX_BITS[square.index]
+
+  queen_attack = BISHOP_ATTACK[square.index][bishop_occ]
+  queen_attack |= ROOK_ATTACK[square.index][rook_occ]
+
+  return queen_attack
+ 
 def initALL():
   init_leapers_attacks()
 

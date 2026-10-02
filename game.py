@@ -1,4 +1,3 @@
-from bitBoard import BitBoard
 import pygame
 import numpy as np 
 from bitUtil import *
@@ -33,14 +32,45 @@ class ChessBoard:
     self.blackQueen = Piece( Color.BLACK,np.uint64( 0x000000000000008), "pieceImages/blackQueen.png")
     self.blackKing = Piece( Color.BLACK, np.uint64(0x0000000000000010), "pieceImages/blackKing.png")
 
-    self.allPieces = [self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing,self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]
+    self.allPieces = [[self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing],
+                      [self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]]
+    
+    self.whitePieceBitmap = self.whitePawn|self.whiteKnight|self.whiteBishop|self.whiteRook|self.whiteQueen|self.whiteKing
+    self.blackPieceBitmap = self.blackPawn|self.blackKnight|self.blackBishop|self.blackRook|self.blackQueen|self.blackKing
+    self.bothPieceBitmap = self.whitePiece|self.blackPiece
 
-    self.piece_bit_board = np.zeros((2,6),dtype=np.uint64)
-    self.occupancy = np.zeros(3, dtype=np.uint64)
     self.side = -1
     self.enpassant = Coordinate.no_sq
     self.castle = 0
+
+#logic functions
+  def isSquareAttacked(self, square:Square):
+    if self.side == Color.WHITE:
+      if(PAWN_ATTACKS[Color.BLACK][square.index] & self.whitePawn.bitmap):
+        return True
+      elif(KNIGHT_ATTACKS[square.index] & self.whiteKnight.bitmap):
+        return True
+      elif(get_bishop_attacks([square.index][self.bothPieceBitmap]) & self.whiteBishop.bitmap):
+        return True
+      elif(get_rook_attacks([square.index][self.bothPieceBitmap]) & self.whiteRook.bitmap):
+        return True
+      elif(get_queen_attacks([square.index][self.bothPieceBitmap])& self.whiteQueen.bitmap):
+        return True
+    elif self.side == Color.BLACK:
+      if(PAWN_ATTACKS[Color.WHITE][square.index] & self.blackPawn.bitmap):
+        return True
+      elif(KNIGHT_ATTACKS[square.index] & self.blackKnight.bitmap):
+        return True
+      elif(get_bishop_attacks([square.index][self.bothPieceBitmap]) & self.blackBishop.bitmap):
+        return True
+      elif(get_rook_attacks([square.index][self.bothPieceBitmap]) & self.blackRook.bitmap):
+        return True
+      elif(get_queen_attacks([square.index][self.bothPieceBitmap])& self.blackQueen.bitmap):
+        return True
+    else:
+      return False
     
+#draw funcitons
   def getIndexToScreenCoordinates(self, index):
     row = index%8 
     column = index//8 
@@ -77,8 +107,9 @@ class ChessBoard:
       bitmap = clearBit(bitmap, Square(index))
 
   def drawAllPieces(self):
-    for i  in range(len(self.allPieces)):
-      self.drawPiecesFromBitmap(self.allPieces[i])
+    for side in range(2):
+      for piece  in range(6):
+        self.drawPiecesFromBitmap(self.allPieces[side][piece])
 
   def getPieceImage(self,piece:Piece):
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
@@ -87,9 +118,10 @@ class ChessBoard:
 
   def getObjectByIndex(self, index):
     sq = Square(index)
-    for i in range(len(self.allPieces)):
-      if getBit(self.allPieces[i].bitmap, sq):
-        return self.allPieces[i]
+    for side in range(2):
+      for piece in range(6):
+        if getBit(self.allPieces[side][piece].bitmap, sq):
+          return self.allPieces[side][piece]
 
   def popAndGetSelectedPiece(self, index):
     pieceObject = self.getObjectByIndex(index)
@@ -97,7 +129,6 @@ class ChessBoard:
       pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
 
     return pieceObject 
-
 
   def putPieceToSquare(self, piece:Piece, index):
     piece.bitmap = setBit(piece.bitmap, Square(index))
@@ -114,11 +145,11 @@ class Game:
     self.fps = 60
     self.holdPiece = None
     self.timer = 0
+    initALL()
 
   def initGame(self):
 
-    initALL()
-
+    
     while self.run:
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -142,7 +173,7 @@ class Game:
 
       #update screen
       if self.update:
-        printBitBoard(self.cb.whitePawn.bitmap)
+        # printBitBoard(self.cb.whitePawn.bitmap)
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 
