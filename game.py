@@ -10,8 +10,10 @@ class ChessBoard:
 
   pieceNames = ["pawn","knight","bishop","rook","queen","king"]
 
-  def __init__(self, screen_w, screen_h, screen):
+  def __init__(self, screen_w, screen_h, screen, attack_surface):
+
     self.screen = screen
+    self.attack_surface = attack_surface
     self.width = screen_w
     self.height = screen_h
     self.n = 8
@@ -35,13 +37,17 @@ class ChessBoard:
     self.allPieces = [[self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing],
                       [self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]]
     
-    self.whitePieceBitmap = self.whitePawn|self.whiteKnight|self.whiteBishop|self.whiteRook|self.whiteQueen|self.whiteKing
-    self.blackPieceBitmap = self.blackPawn|self.blackKnight|self.blackBishop|self.blackRook|self.blackQueen|self.blackKing
-    self.bothPieceBitmap = self.whitePiece|self.blackPiece
+    self.whitePieceBitmap = self.whitePawn.bitmap|self.whiteKnight.bitmap|self.whiteBishop.bitmap|self.whiteRook.bitmap|self.whiteQueen.bitmap|self.whiteKing.bitmap
+    self.blackPieceBitmap = self.blackPawn.bitmap|self.blackKnight.bitmap|self.blackBishop.bitmap|self.blackRook.bitmap|self.blackQueen.bitmap|self.blackKing.bitmap
+    self.bothPieceBitmap = self.whitePieceBitmap|self.blackPieceBitmap
 
     self.side = -1
     self.enpassant = Coordinate.no_sq
     self.castle = 0
+
+#loop funcitons
+
+
 
 #logic functions
   def isSquareAttacked(self, square:Square):
@@ -50,39 +56,41 @@ class ChessBoard:
         return True
       elif(KNIGHT_ATTACKS[square.index] & self.whiteKnight.bitmap):
         return True
-      elif(get_bishop_attacks([square.index][self.bothPieceBitmap]) & self.whiteBishop.bitmap):
+      elif(get_bishop_attacks(square,self.bothPieceBitmap) & self.whiteBishop.bitmap):
         return True
-      elif(get_rook_attacks([square.index][self.bothPieceBitmap]) & self.whiteRook.bitmap):
+      elif(get_rook_attacks(square,self.bothPieceBitmap) & self.whiteRook.bitmap):
         return True
-      elif(get_queen_attacks([square.index][self.bothPieceBitmap])& self.whiteQueen.bitmap):
+      elif(get_queen_attacks(square,self.bothPieceBitmap)& self.whiteQueen.bitmap):
         return True
+      elif(KING_ATTACKS[square.index] & self.whiteKing.bitmap):
+        return True
+      
     elif self.side == Color.BLACK:
       if(PAWN_ATTACKS[Color.WHITE][square.index] & self.blackPawn.bitmap):
         return True
       elif(KNIGHT_ATTACKS[square.index] & self.blackKnight.bitmap):
         return True
-      elif(get_bishop_attacks([square.index][self.bothPieceBitmap]) & self.blackBishop.bitmap):
+      elif(get_bishop_attacks(square,self.bothPieceBitmap) & self.blackBishop.bitmap):
         return True
-      elif(get_rook_attacks([square.index][self.bothPieceBitmap]) & self.blackRook.bitmap):
+      elif(get_rook_attacks(square,self.bothPieceBitmap) & self.blackRook.bitmap):
         return True
-      elif(get_queen_attacks([square.index][self.bothPieceBitmap])& self.blackQueen.bitmap):
+      elif(get_queen_attacks(square,self.bothPieceBitmap)& self.blackQueen.bitmap):
         return True
+      elif(KING_ATTACKS[square.index] & self.blackKing.bitmap):
+        return True
+      
     else:
       return False
-    
+
+  def nextPlayerTurn(self):
+    if (self.side == -1):
+      self.side = 0
+    elif self.side == 0:
+      self.side = 1
+    else:
+      self.side = 0
+
 #draw funcitons
-  def getIndexToScreenCoordinates(self, index):
-    row = index%8 
-    column = index//8 
-    x_co = row*self.cell_w 
-    y_co = column*self.cell_h 
-    return(x_co,y_co)
-
-  def getScreenCoordinatesToIndex(self, coordinate:tuple):
-    rank = coordinate[1]//self.cell_h 
-    file = coordinate[0]//self.cell_w 
-    return(rank*8+file) #return index for 64 bit number
-
   def drawCheckerBoardPattern(self):
     white = True
     for column in range(self.n):
@@ -95,6 +103,26 @@ class ChessBoard:
           pygame.draw.rect(self.screen, (200,0,200), sq_rect)
         white = not white
 
+  def drawAttackSquare(self, index):
+    self.attack_surface.fill(pygame.Color(0,0,0,0))
+    sq = Square(index)
+    if self.isSquareAttacked(sq):
+      x,y = self.getIndexToScreenCoordinates(sq.index)
+      sq_rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
+      pygame.draw.rect(self.attack_surface, (133,1, 1), sq_rect)
+    self.screen.blit(self.attack_surface, (0,0))
+
+  def drawAllAttackSquares(self):
+    self.attack_surface.fill(pygame.Color(0,0,0,0))
+    for column in range(self.n):
+      for row in range(self.n):
+        sq = Square(row*8+column)
+        if self.isSquareAttacked(sq):
+          x,y = self.getIndexToScreenCoordinates(sq.index)
+          sq_rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
+          pygame.draw.rect(self.attack_surface, (133,1, 1), sq_rect)
+    self.screen.blit(self.attack_surface, (0,0))
+
   def drawPiecesFromBitmap(self, piece: Piece):
     bitmap = piece.bitmap
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
@@ -105,12 +133,25 @@ class ChessBoard:
       image_rect = image.get_rect(topleft=coords)
       self.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
-
+        
   def drawAllPieces(self):
     for side in range(2):
       for piece  in range(6):
         self.drawPiecesFromBitmap(self.allPieces[side][piece])
 
+#get set and pop funcitons
+  def getIndexToScreenCoordinates(self, index):
+    row = index%8 
+    column = index//8 
+    x_co = row*self.cell_w 
+    y_co = column*self.cell_h 
+    return(x_co,y_co)
+
+  def getScreenCoordinatesToIndex(self, coordinate:tuple):
+    rank = coordinate[1]//self.cell_h
+    file = coordinate[0]//self.cell_w
+    return(rank*8+file) #return index for 64 bit number
+  
   def getPieceImage(self,piece:Piece):
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
     image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
@@ -133,22 +174,26 @@ class ChessBoard:
   def putPieceToSquare(self, piece:Piece, index):
     piece.bitmap = setBit(piece.bitmap, Square(index))
 
-
+#game loop
 class Game:
   def __init__(self,screen_w=800,screen_h=800):
-    self.run = True
     pygame.init()
+    self.run = True
+    
     self.screen = pygame.display.set_mode((screen_w, screen_h))
+    self.attack_surface = pygame.Surface((screen_w,screen_h), pygame.SRCALPHA)
+    self.cb = ChessBoard(screen_w,screen_h,self.screen, self.attack_surface)
+
     self.clock = pygame.time.Clock()   
-    self.cb = ChessBoard(screen_w,screen_h,self.screen)
     self.update = True
     self.fps = 60
     self.holdPiece = None
+    self.holdPieceIndex = None
     self.timer = 0
     initALL()
 
   def initGame(self):
-
+    self.cb.nextPlayerTurn()
     
     while self.run:
       for event in pygame.event.get():
@@ -163,6 +208,7 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
+          self.holdPieceIndex = selected_index 
           if self.holdPiece == None:  
             self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
           else:
@@ -173,11 +219,13 @@ class Game:
 
       #update screen
       if self.update:
+        
         # printBitBoard(self.cb.whitePawn.bitmap)
         self.cb.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 
         if self.holdPiece != None:
+          self.cb.drawAttackSquare(self.holdPieceIndex)
           holdPieceImage = self.cb.getPieceImage(self.holdPiece)
           m_pos = pygame.mouse.get_pos()
           image_rect = holdPieceImage.get_rect(center=m_pos)
