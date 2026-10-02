@@ -20,26 +20,27 @@ class ChessBoard:
     self.cell_w = self.width/self.n
     self.cell_h = self.height/self.n
 
-    self.whitePawn = Piece( Color.WHITE, np.uint64(0x00FF000000000000), "pieceImages/whitePawn.png")
-    self.whiteKnight = Piece( Color.WHITE, np.uint64(0x4200000000000000), "pieceImages/whiteKnight.png")
-    self.whiteBishop = Piece( Color.WHITE, np.uint64(0x2400000000000000), "pieceImages/whiteBishop.png")
-    self.whiteRook = Piece( Color.WHITE, np.uint64(0x8100000000000000), "pieceImages/whiteRook.png")
-    self.whiteQueen = Piece( Color.WHITE, np.uint64(0x0800000000000000), "pieceImages/whiteQueen.png")
-    self.whiteKing = Piece( Color.WHITE, np.uint64(0x1000000000000000), "pieceImages/whiteKing.png")
+    self.whitePawn = Piece( Color.WHITE, np.uint64(0x00FF000000000000), "pieceImages/whitePawn.png", "p")
+    self.whiteKnight = Piece( Color.WHITE, np.uint64(0x4200000000000000), "pieceImages/whiteKnight.png", "n")
+    self.whiteBishop = Piece( Color.WHITE, np.uint64(0x2400000000000000), "pieceImages/whiteBishop.png", "b")
+    self.whiteRook = Piece( Color.WHITE, np.uint64(0x8100000000000000), "pieceImages/whiteRook.png", "r")
+    self.whiteQueen = Piece( Color.WHITE, np.uint64(0x0800000000000000), "pieceImages/whiteQueen.png", "q")
+    self.whiteKing = Piece( Color.WHITE, np.uint64(0x1000000000000000), "pieceImages/whiteKing.png", "k")
     
-    self.blackPawn = Piece( Color.BLACK, np.uint64(0x000000000000FF00), "pieceImages/blackPawn.png")
-    self.blackKnight = Piece( Color.BLACK, np.uint64(0x00000000000042), "pieceImages/blackKnight.png")
-    self.blackBishop = Piece( Color.BLACK, np.uint64(0x0000000000000024), "pieceImages/blackBishop.png")
-    self.blackRook = Piece( Color.BLACK, np.uint64(0x0000000000000081), "pieceImages/blackRook.png")
-    self.blackQueen = Piece( Color.BLACK,np.uint64( 0x000000000000008), "pieceImages/blackQueen.png")
-    self.blackKing = Piece( Color.BLACK, np.uint64(0x0000000000000010), "pieceImages/blackKing.png")
+    self.blackPawn = Piece( Color.BLACK, np.uint64(0x000000000000FF00), "pieceImages/blackPawn.png", "p")
+    self.blackKnight = Piece( Color.BLACK, np.uint64(0x00000000000042), "pieceImages/blackKnight.png", "n")
+    self.blackBishop = Piece( Color.BLACK, np.uint64(0x0000000000000024), "pieceImages/blackBishop.png", "b")
+    self.blackRook = Piece( Color.BLACK, np.uint64(0x0000000000000081), "pieceImages/blackRook.png", "r")
+    self.blackQueen = Piece( Color.BLACK,np.uint64( 0x000000000000008), "pieceImages/blackQueen.png", "q")
+    self.blackKing = Piece( Color.BLACK, np.uint64(0x0000000000000010), "pieceImages/blackKing.png", "k")
 
     self.allPieces = [[self.whitePawn,self.whiteKnight,self.whiteBishop,self.whiteRook,self.whiteQueen,self.whiteKing],
                       [self.blackPawn, self.blackKnight,self.blackBishop,self.blackRook,self.blackQueen,self.blackKing]]
     
-    self.whitePieceBitmap = self.whitePawn.bitmap|self.whiteKnight.bitmap|self.whiteBishop.bitmap|self.whiteRook.bitmap|self.whiteQueen.bitmap|self.whiteKing.bitmap
-    self.blackPieceBitmap = self.blackPawn.bitmap|self.blackKnight.bitmap|self.blackBishop.bitmap|self.blackRook.bitmap|self.blackQueen.bitmap|self.blackKing.bitmap
-    self.bothPieceBitmap = self.whitePieceBitmap|self.blackPieceBitmap
+
+    self.whitePieceBitmap = self.getWhiteBitmap()
+    self.blackPieceBitmap = self.getBlackBitmap()
+    self.bothPieceBitmap = self.getBothBitmap()
 
     self.side = -1
     self.enpassant = Coordinate.no_sq
@@ -81,7 +82,7 @@ class ChessBoard:
       
     else:
       return False
-
+  
   def nextPlayerTurn(self):
     if (self.side == -1):
       self.side = 0
@@ -89,6 +90,7 @@ class ChessBoard:
       self.side = 1
     else:
       self.side = 0
+
 
 #draw funcitons
   def drawCheckerBoardPattern(self):
@@ -102,16 +104,7 @@ class ChessBoard:
         else:
           pygame.draw.rect(self.screen, (200,0,200), sq_rect)
         white = not white
-
-  def drawAttackSquare(self, index):
-    self.attack_surface.fill(pygame.Color(0,0,0,0))
-    sq = Square(index)
-    if self.isSquareAttacked(sq):
-      x,y = self.getIndexToScreenCoordinates(sq.index)
-      sq_rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
-      pygame.draw.rect(self.attack_surface, (133,1, 1), sq_rect)
-    self.screen.blit(self.attack_surface, (0,0))
-
+  
   def drawAllAttackSquares(self):
     self.attack_surface.fill(pygame.Color(0,0,0,0))
     for column in range(self.n):
@@ -120,7 +113,7 @@ class ChessBoard:
         if self.isSquareAttacked(sq):
           x,y = self.getIndexToScreenCoordinates(sq.index)
           sq_rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
-          pygame.draw.rect(self.attack_surface, (133,1, 1), sq_rect)
+          pygame.draw.rect(self.attack_surface, (133,1, 1, 129), sq_rect)
     self.screen.blit(self.attack_surface, (0,0))
 
   def drawPiecesFromBitmap(self, piece: Piece):
@@ -138,7 +131,7 @@ class ChessBoard:
     for side in range(2):
       for piece  in range(6):
         self.drawPiecesFromBitmap(self.allPieces[side][piece])
-
+        
 #get set and pop funcitons
   def getIndexToScreenCoordinates(self, index):
     row = index%8 
@@ -151,6 +144,17 @@ class ChessBoard:
     rank = coordinate[1]//self.cell_h
     file = coordinate[0]//self.cell_w
     return(rank*8+file) #return index for 64 bit number
+
+  def getWhiteBitmap(self):
+    return self.whitePawn.bitmap|self.whiteKnight.bitmap|self.whiteBishop.bitmap|self.whiteRook.bitmap|self.whiteQueen.bitmap|self.whiteKing.bitmap
+  
+  def getBlackBitmap(self):
+    return self.blackPawn.bitmap|self.blackKnight.bitmap|self.blackBishop.bitmap|self.blackRook.bitmap|self.blackQueen.bitmap|self.blackKing.bitmap
+  
+  def getBothBitmap(self):
+    white = self.getWhiteBitmap()
+    black = self.getBlackBitmap() 
+    return white|black
   
   def getPieceImage(self,piece:Piece):
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
@@ -173,6 +177,10 @@ class ChessBoard:
 
   def putPieceToSquare(self, piece:Piece, index):
     piece.bitmap = setBit(piece.bitmap, Square(index))
+    
+    self.whitePieceBitmap = self.getWhiteBitmap()
+    self.blackPieceBitmap = self.getBlackBitmap()
+    self.bothPieceBitmap = self.getBothBitmap()
 
 #game loop
 class Game:
@@ -182,6 +190,7 @@ class Game:
     
     self.screen = pygame.display.set_mode((screen_w, screen_h))
     self.attack_surface = pygame.Surface((screen_w,screen_h), pygame.SRCALPHA)
+
     self.cb = ChessBoard(screen_w,screen_h,self.screen, self.attack_surface)
 
     self.clock = pygame.time.Clock()   
@@ -209,7 +218,8 @@ class Game:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
           self.holdPieceIndex = selected_index 
-          if self.holdPiece == None:  
+
+          if self.holdPiece == None:
             self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
           else:
             self.cb.putPieceToSquare(self.holdPiece,selected_index)
@@ -225,7 +235,7 @@ class Game:
         self.cb.drawAllPieces()
 
         if self.holdPiece != None:
-          self.cb.drawAttackSquare(self.holdPieceIndex)
+          self.cb.drawAllAttackSquares()
           holdPieceImage = self.cb.getPieceImage(self.holdPiece)
           m_pos = pygame.mouse.get_pos()
           image_rect = holdPieceImage.get_rect(center=m_pos)

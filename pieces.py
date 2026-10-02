@@ -3,9 +3,10 @@ import numpy as np
 from cosntants import *
 
 class Piece:
-  def __init__(self, color:Color, bitmap:np.uint64, filePath:str):
+  def __init__(self, color:Color, bitmap:np.uint64, filePath:str, pieceType):
     self.color= color
     self.bitmap = bitmap
     self.filePath = filePath
+    self.type = pieceType
   
   
