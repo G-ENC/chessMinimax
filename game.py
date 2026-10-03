@@ -219,20 +219,25 @@ class Game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-
-          #this check is for to make sure only the player with their turn is playing that round
-          #if self.cb.getObjectByIndex(selected_index) == self.cb.side
-          
+          #not holding any object
           if self.holdPiece == None:
-            print(self.cb.getObjectByIndex(selected_index))
-            self.holdPieceIndex = selected_index
-            self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
+            # if the selected piece exists in that square and the it is that players turn accept the selection
+            if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:
+              self.holdPieceIndex = selected_index
+              self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
+          #holding piece
           else:
-            if self.holdPieceIndex != selected_index:
+            #placement in the same square doesnt passesd the turn
+            if self.holdPieceIndex == selected_index:
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
+              self.holdPieceIndex = None
+            #if the placedf piece is in a diffent location the turn is finished
+            elif self.holdPieceIndex != selected_index:
+              self.cb.putPieceToSquare(self.holdPiece,selected_index)
+              self.holdPiece = None
+              self.holdPieceIndex = None
               self.cb.nextPlayerTurn()
-            print(self.cb.side)
 
       #update screen
       if self.update:
