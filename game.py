@@ -82,6 +82,18 @@ class ChessBoard:
       
     else:
       return False
+
+  # def validMovesForPiece(self, piece:Piece, source_square:Square):
+
+  #   target_squares = []
+
+  #   #quite move
+  #   if piece.type == "p":
+  #     quite_move = source_square.toBitBoard() - np.uint64(8)
+  #     if quite_move >= 0:
+  #       target_squares.append(quite_move)
+
+
   
   def nextPlayerTurn(self):
     if (self.side == -1):
