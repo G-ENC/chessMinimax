@@ -1,12 +1,13 @@
 import pygame
 import numpy as np 
+np.seterr(over='ignore')
 from bitUtil import *
 from pieces import *
 from cosntants import * 
 from pieces import *
 from tables import *
 from chessBoard import ChessBoard
-
+from movegen import *
 
 #game loop
 class Game:
@@ -35,29 +36,24 @@ class Game:
         if event.type == pygame.QUIT:
           self.run = False
 
-        #update the screen so that the piece follows the cursor
-        elif event.type == pygame.MOUSEMOTION:  
+        elif event.type == pygame.MOUSEMOTION:#update the screen so that the piece follows the cursor
           self.update = True
 
-        #hold the piece if not holding already
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:#hold the piece if not holding already
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-          #not holding any object
-          if self.holdPiece == None:
-            # if the selected piece exists in that square and the it is that players turn accept the selection
-            if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:
+          if self.holdPiece == None:#not holding any piece object
+            if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
-          #holding piece
-          else:
-            #placement in the same square doesnt passesd the turn
-            if self.holdPieceIndex == selected_index:
+              for move in generatePieceMoves(Square(self.holdPieceIndex),self.holdPiece,self.cb):
+                print(move)
+          else:#holding piece
+            if self.holdPieceIndex == selected_index:#placement in the same square doesnt passesd the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
               self.holdPieceIndex = None
-            #if the placedf piece is in a diffent location the turn is finished
-            elif self.holdPieceIndex != selected_index:
+            elif self.holdPieceIndex != selected_index:#if the placedf piece is in a diffent location the turn is finished
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
               self.holdPieceIndex = None
