@@ -46,7 +46,6 @@ class Game:
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
-              
               for move in generatePieceMoves(Square(self.holdPieceIndex),self.holdPiece,self.cb):
                 print(f"{self.holdPiece.type}: {move}")
           else:#holding piece
