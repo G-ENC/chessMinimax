@@ -9,6 +9,9 @@ from tables import *
 from chessBoard import ChessBoard
 from movegen import *
 
+
+
+
 #game loop
 class Game:
   def __init__(self,screen_w=800,screen_h=800):
@@ -28,6 +31,20 @@ class Game:
     self.timer = 0
     initALL()
 
+
+  #draw functions
+  def drawCheckerBoardPattern(self):
+    white = True
+    for column in range(self.cb.n):
+      white = not white
+      for row in range(self.cb.n):
+        sq_rect = pygame.Rect(self.cb.cell_w*row, self.cb.cell_h*column, self.cb.cell_w, self.cb.cell_h)
+        if white:
+          pygame.draw.rect(self.screen, (50,50,50), sq_rect)
+        else:
+          pygame.draw.rect(self.screen, (200,0,200), sq_rect)
+        white = not white
+
   def initGame(self):
     self.cb.nextPlayerTurn()
     
@@ -46,9 +63,9 @@ class Game:
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
-
-              for move in generatePieceMoves(Square(self.holdPieceIndex),self.holdPiece,self.cb):
-                print(f"{self.holdPiece.type}: {move}")
+              print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+              for move in generateAllMoves(self.cb):
+                print(f"{move}")
           else:#holding piece
             if self.holdPieceIndex == selected_index:#placement in the same square doesnt passesd the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
@@ -65,7 +82,7 @@ class Game:
       if self.update:
         
         # printBitBoard(self.cb.whitePawn.bitmap)
-        self.cb.drawCheckerBoardPattern()
+        self.drawCheckerBoardPattern()
         self.cb.drawAllPieces()
 
         if self.holdPiece != None:

@@ -50,61 +50,51 @@ def getQueenMoveBitboard(square:Square, chessBoard:ChessBoard):
 
 def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard):
   possible_moves = [] #get all the possible move for the piece
+
   if piece.type == "p": #pawn
     moveset = getPawnMoveBitboard(source_square, chessBoard) #possible square that specific pawn can move 
     white_promote = source_square.toBitBoard() & np.uint64(65280) #white pawn at 7th row
     black_promote = source_square.toBitBoard() & np.uint64(71776119061217280) #black pawn at 2nd row
 
-    if (white_promote and chessBoard.side == Color.WHITE) or (black_promote and chessBoard.side == Color.WHITE): #the pormotion should occure at the round they are playing?? duh
+    if (white_promote and chessBoard.side == Color.WHITE) or (black_promote and chessBoard.side == Color.BLACK): #the pormotion should occure at the round they are playing?? duh
       while(moveset): #for all the bits that are avaible loop every single one and save it as a possible Move() which has a source and destination 
         bit_index = getLsbIndex(moveset) #get lsb 
         dest = Square(bit_index)
         possible_moves.append([Move(source_square, dest, True)])
         moveset = clearBit(moveset, dest) #delete that bit so the next lsb is  new one
-    return possible_moves 
-  
+      return possible_moves
+
   elif piece.type == "n": #knight
     moveset = getKnightMoveBitboard(source_square, chessBoard)
-    while(moveset): 
-          bit_index = getLsbIndex(moveset) 
-          dest = Square(bit_index)
-          possible_moves.append(Move(source_square, dest))
-          moveset = clearBit(moveset, dest) 
-    return possible_moves 
 
   elif piece.type == "k": #king
     moveset = getKingMoveBitboard(source_square, chessBoard)
-    while(moveset): 
-          bit_index = getLsbIndex(moveset) 
-          dest = Square(bit_index)
-          possible_moves.append(Move(source_square, dest))
-          moveset = clearBit(moveset, dest) 
-    return possible_moves 
 
   elif piece.type == "b": #bishop
     moveset = getBishopMoveBitboard(source_square, chessBoard)
-    while(moveset): 
-          bit_index = getLsbIndex(moveset) 
-          dest = Square(bit_index)
-          possible_moves.append(Move(source_square, dest))
-          moveset = clearBit(moveset, dest) 
-    return possible_moves 
-  
+
   elif piece.type == "r": #rook
     moveset = getRookMoveBitboard(source_square, chessBoard)
-    while(moveset): 
-          bit_index = getLsbIndex(moveset) 
-          dest = Square(bit_index)
-          possible_moves.append(Move(source_square, dest))
-          moveset = clearBit(moveset, dest) 
-    return possible_moves 
 
   elif piece.type == "q": #queen
     moveset = getQueenMoveBitboard(source_square, chessBoard)
-    while(moveset): 
-          bit_index = getLsbIndex(moveset) 
-          dest = Square(bit_index)
-          possible_moves.append(Move(source_square, dest))
-          moveset = clearBit(moveset, dest) 
-    return possible_moves
-  
+
+  while moveset:
+    bit_index = getLsbIndex(moveset) 
+    dest = Square(bit_index)
+    possible_moves.append(Move(source_square, dest))
+    moveset = clearBit(moveset, dest) 
+  return possible_moves 
+
+def generateAllMoves(chessBoard: ChessBoard):
+  all_moves = []
+  for side in range(2):
+    for piece in range(6):
+      piece = chessBoard.allPieces[side][piece]
+      piece_bitboard = piece.bitmap
+      while piece_bitboard:
+        piece_index = getLsbIndex(piece_bitboard) 
+        piece_square = Square(piece_index)
+        piece_bitboard = clearBit(piece_bitboard, piece_square) 
+        all_moves.append(generatePieceMoves(piece_square, piece, chessBoard))
+  return all_moves
