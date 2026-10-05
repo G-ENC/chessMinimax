@@ -40,7 +40,7 @@ def maskPawnAttacks(color:Color, square: Square) -> np.uint64:
     attacks |= (square.toBitBoard() & ~FILE_H) << np.uint8(9)
   return attacks
 PAWN_ATTACKS = np.fromiter((maskPawnAttacks(color, square) for (color, square) in SQUARE_ITTER_COLOR), dtype=np.uint64, count=2*64)
-PAWN_ATTACKS.shape = (2,64)
+PAWN_ATTACKS = PAWN_ATTACKS.reshape(2,64)
 def maskKinghtAttacks(square: Square) -> np.uint64:
   attack = np.uint64(0)
 
