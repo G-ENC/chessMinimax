@@ -99,4 +99,13 @@ def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard)
           possible_moves.append(Move(source_square, dest))
           moveset = clearBit(moveset, dest) 
     return possible_moves 
+
+  elif piece.type == "q": #queen
+    moveset = getQueenMoveBitboard(source_square, chessBoard)
+    while(moveset): 
+          bit_index = getLsbIndex(moveset) 
+          dest = Square(bit_index)
+          possible_moves.append(Move(source_square, dest))
+          moveset = clearBit(moveset, dest) 
+    return possible_moves 
   

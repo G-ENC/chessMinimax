@@ -46,8 +46,9 @@ class Game:
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
+              
               for move in generatePieceMoves(Square(self.holdPieceIndex),self.holdPiece,self.cb):
-                print(move)
+                print(f"{self.holdPiece.type}: {move}")
           else:#holding piece
             if self.holdPieceIndex == selected_index:#placement in the same square doesnt passesd the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
@@ -58,6 +59,7 @@ class Game:
               self.holdPiece = None
               self.holdPieceIndex = None
               self.cb.nextPlayerTurn()
+          self.update = True
 
       #update screen
       if self.update:

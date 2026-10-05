@@ -8,7 +8,7 @@ class Square:
     
     def __str__(self):
         f = self.index%8
-        r = self.index//8 + 1
+        r = self.index//8 
         
         return Coordinate(r*8+f).name
         
