@@ -31,7 +31,6 @@ class Game:
     self.timer = 0
     initALL()
 
-
   #draw functions
   def drawCheckerBoardPattern(self):
     white = True
@@ -44,6 +43,42 @@ class Game:
         else:
           pygame.draw.rect(self.screen, (200,0,200), sq_rect)
         white = not white
+  
+  def drawAllAttackSquares(self):
+    self.attack_surface.fill(pygame.Color(0,0,0,0))
+    for column in range(self.cb.n):
+      for row in range(self.cb.n):
+        sq = Square(row*8+column)
+        if self.cb.isSquareAttacked(sq):
+          x,y = self.cb.getIndexToScreenCoordinates(sq.index)
+          sq_rect = pygame.Rect(x, y, self.cb.cell_w, self.cb.cell_h)
+          pygame.draw.rect(self.cb.attack_surface, (133,1, 1, 129), sq_rect)
+    self.screen.blit(self.cb.attack_surface, (0,0))
+
+  def drawCurrentAttackSquares(self, square, piece:Piece, cb):
+    moves = generatePieceMoves(square, piece, cb)
+    self.attack_surface.fill(pygame.Color(0,0,0,0))   
+    for move in moves:
+      x,y = self.cb.getIndexToScreenCoordinates(move.destination.index)
+      sq_rect = pygame.Rect(x, y, self.cb.cell_w, self.cb.cell_h)
+      pygame.draw.rect(self.cb.attack_surface, (133,1, 1, 129), sq_rect)
+    self.screen.blit(self.cb.attack_surface, (0,0))
+
+  def drawPiecesFromBitboard(self, piece: Piece):
+    bitmap = piece.bitmap
+    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
+    image = pygame.transform.scale(image, (int(self.cb.cell_w), int(self.cb.cell_h)))
+    while bitmap:
+      index = getLsbIndex(bitmap)     
+      coords = self.cb.getIndexToScreenCoordinates(index)
+      image_rect = image.get_rect(topleft=coords)
+      self.cb.screen.blit(image, image_rect)
+      bitmap = clearBit(bitmap, Square(index))
+        
+  def drawAllPieces(self):
+    for side in range(2):
+      for piece  in range(6):
+        self.drawPiecesFromBitboard(self.cb.allPieces[side][piece])
 
   def initGame(self):
     self.cb.nextPlayerTurn()
@@ -63,15 +98,16 @@ class Game:
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
-              print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-              for move in generateAllMoves(self.cb):
-                print(f"{move}")
           else:#holding piece
-            if self.holdPieceIndex == selected_index:#placement in the same square doesnt passesd the turn
+            possible_moves = generatePieceMoves(Square(selected_index), self.holdPiece, self.cb)
+            source = Coordinate(self.holdPieceIndex).name
+            dest = Coordinate(selected_index).name
+            valid = True if [source,dest] in possible_moves else False
+            if self.holdPieceIndex == selected_index:#placement in the same square doesnt passes the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
               self.holdPieceIndex = None
-            elif self.holdPieceIndex != selected_index:#if the placedf piece is in a diffent location the turn is finished
+            elif self.holdPieceIndex != selected_index and valid:#if the placedf piece is in a diffent location the turn is finished
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
               self.holdPieceIndex = None
@@ -83,10 +119,10 @@ class Game:
         
         # printBitBoard(self.cb.whitePawn.bitmap)
         self.drawCheckerBoardPattern()
-        self.cb.drawAllPieces()
+        self.drawAllPieces()
 
         if self.holdPiece != None:
-          self.cb.drawAllAttackSquares()
+          self.drawCurrentAttackSquares(Square(self.holdPieceIndex),self.holdPiece, self.cb)
           holdPieceImage = self.cb.getPieceImage(self.holdPiece)
           m_pos = pygame.mouse.get_pos()
           image_rect = holdPieceImage.get_rect(center=m_pos)

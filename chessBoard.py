@@ -97,47 +97,7 @@ class ChessBoard:
       self.side = 1
     else:
       self.side = 0
-
-#draw funcitons
-  def drawCheckerBoardPattern(self):
-    white = True
-    for column in range(self.n):
-      white = not white
-      for row in range(self.n):
-        sq_rect = pygame.Rect(self.cell_w*row, self.cell_h*column, self.cell_w, self.cell_h)
-        if white:
-          pygame.draw.rect(self.screen, (50,50,50), sq_rect)
-        else:
-          pygame.draw.rect(self.screen, (200,0,200), sq_rect)
-        white = not white
-  
-  def drawAllAttackSquares(self):
-    self.attack_surface.fill(pygame.Color(0,0,0,0))
-    for column in range(self.n):
-      for row in range(self.n):
-        sq = Square(row*8+column)
-        if self.isSquareAttacked(sq):
-          x,y = self.getIndexToScreenCoordinates(sq.index)
-          sq_rect = pygame.Rect(x, y, self.cell_w, self.cell_h)
-          pygame.draw.rect(self.attack_surface, (133,1, 1, 129), sq_rect)
-    self.screen.blit(self.attack_surface, (0,0))
-  
-  def drawPiecesFromBitboard(self, piece: Piece):
-    bitmap = piece.bitmap
-    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
-    image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    while bitmap:
-      index = getLsbIndex(bitmap)     
-      coords = self.getIndexToScreenCoordinates(index)
-      image_rect = image.get_rect(topleft=coords)
-      self.screen.blit(image, image_rect)
-      bitmap = clearBit(bitmap, Square(index))
-        
-  def drawAllPieces(self):
-    for side in range(2):
-      for piece  in range(6):
-        self.drawPiecesFromBitboard(self.allPieces[side][piece])
-        
+ 
 #get set and pop funcitons
   def getIndexToScreenCoordinates(self, index):
     row = index%8 
