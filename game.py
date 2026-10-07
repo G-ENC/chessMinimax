@@ -29,6 +29,12 @@ class Game:
     initALL()
 
   #draw functions
+  def getPieceImage(self,piece:Piece):
+    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
+    image = pygame.transform.scale(image, (int(self.cb.cell_w), int(self.cb.cell_h)))
+    return image
+
+
   def drawCheckerBoardPattern(self):
     white = True
     for column in range(self.cb.n):
@@ -94,7 +100,7 @@ class Game:
           if self.holdPiece == None:#not holding any piece object
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
-              self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
+              # self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
           else:#holding piece
             possible_moves = generatePieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
             source = Coordinate(self.holdPieceIndex).name
@@ -107,6 +113,7 @@ class Game:
               self.holdPiece = None
               self.holdPieceIndex = None
             elif self.holdPieceIndex != selected_index and valid:#if the placedf piece is in a diffent location the turn is finished
+              print(f"move: {move} piece: {self.holdPiece}")
               self.cb = self.cb.applyMove(move)
               self.holdPiece = None
               self.holdPieceIndex = None
@@ -122,7 +129,7 @@ class Game:
 
         if self.holdPiece != None:
           self.drawCurrentAttackSquares(Square(self.holdPieceIndex),self.holdPiece, self.cb)
-          holdPieceImage = self.cb.getPieceImage(self.holdPiece)
+          holdPieceImage = self.getPieceImage(self.holdPiece)
           m_pos = pygame.mouse.get_pos()
           image_rect = holdPieceImage.get_rect(center=m_pos)
           self.screen.blit(holdPieceImage, image_rect)

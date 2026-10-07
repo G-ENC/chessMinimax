@@ -49,7 +49,7 @@ class ChessBoard:
   def copy(self):
     nb = ChessBoard.__new__(ChessBoard)
     nb.screen, nb.attack_surface = self.screen, self.attack_surface
-    nb.width, nb.height, nb.n = self.width, nb.height, nb.n
+    nb.width, nb.height, nb.n = self.width, self.height, self.n
     nb.cell_w, nb.cell_h = self.cell_w, self.cell_h
 
     nb.allPieces = [[Piece(p.color, p.bitmap, p.filePath, p.type) for p in side] for side in self.allPieces]
@@ -58,7 +58,7 @@ class ChessBoard:
     
     (nb.blackPawn, nb.blackKnight, nb.blackBishop, nb.blackRook, nb.blackQueen, nb.blackKing) = nb.allPieces[1]
 
-    nb.side, nb.enpassant, nb.castle = self.side, self.enpassant, nb.castle
+    nb.side, nb.enpassant, nb.castle = self.side, self.enpassant, self.castle
     nb.refreshBoard()
 
     return nb
@@ -145,11 +145,7 @@ class ChessBoard:
     black = self.getBlackBitboard() 
     return white|black
   
-  def getPieceImage(self,piece:Piece):
-    image = pygame.image.load(f"{piece.filePath}").convert_alpha()
-    image = pygame.transform.scale(image, (int(self.cell_w), int(self.cell_h)))
-    return image
-
+  
   #loops over the piece array and finds the matching piece that occupies the selected square
   def getObjectByIndex(self, index):
     sq = Square(index)
