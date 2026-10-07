@@ -5,6 +5,7 @@ from pieces import *
 from cosntants import * 
 from pieces import *
 from tables import *
+from move import *
 
 class ChessBoard:
 
@@ -149,3 +150,35 @@ class ChessBoard:
     self.whitePieceBitboard = self.getWhiteBitboard()
     self.blackPieceBitboard = self.getBlackBitboard()
     self.bothPieceBitboard = self.getBothBitboard()
+
+  def clearPieceFromSquare(self, piece:Piece, index):
+    piece.bitmap = clearBit(piece.bitmap, Square(index))
+    
+    self.whitePieceBitboard = self.getWhiteBitboard()
+    self.blackPieceBitboard = self.getBlackBitboard()
+    self.bothPieceBitboard = self.getBothBitboard()
+
+
+  def applyMove(self, move:Move):
+    new_board = ChessBoard()
+
+    new_board.screen = self.screen
+    new_board.attack_surface = self.attack_surface
+    new_board.width = self.width 
+    new_board.height = self.height 
+    new_board.n = self.n
+    new_board.cell_w = self.cell_w
+    new_board.cell_h = self.cell_h
+
+    new_board.allPieces = self.allPieces
+    new_board.whitePieceBitboard = self.whitePieceBitboard
+    new_board.blackPieceBitboard = self.blackPieceBitboard
+    new_board.bothPieceBitboard = self.bothPieceBitboard
+
+    new_board.side = self.side
+
+    piece = self.popAndGetSelectedPiece(Coordinate[move.source].value)
+    dest_piece = self.getObjectByIndex(Coordinate[move.destination].value)
+    if dest_piece.color != piece.color:
+      self.clearPieceFromSquare(dest_piece, getLsbIndex(dest_piece.bitmap))
+    

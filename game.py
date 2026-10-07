@@ -9,9 +9,6 @@ from tables import *
 from chessBoard import ChessBoard
 from movegen import *
 
-
-
-
 #game loop
 class Game:
   def __init__(self,screen_w=800,screen_h=800):
@@ -99,10 +96,12 @@ class Game:
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
           else:#holding piece
-            possible_moves = generatePieceMoves(Square(selected_index), self.holdPiece, self.cb)
+            possible_moves = generatePieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
             source = Coordinate(self.holdPieceIndex).name
             dest = Coordinate(selected_index).name
-            valid = True if [source,dest] in possible_moves else False
+            move = Move(source,dest)
+            valid = move in possible_moves
+
             if self.holdPieceIndex == selected_index:#placement in the same square doesnt passes the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
@@ -129,8 +128,6 @@ class Game:
           self.screen.blit(holdPieceImage, image_rect)
         
         self.update = False
-      
-   
 
       pygame.display.update()
     pygame.quit()

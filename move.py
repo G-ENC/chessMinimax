@@ -9,3 +9,6 @@ class Move:
 
   def __repr__(self):
     return self.__str__()
+  
+  def __eq__(self, other):
+    return str(self.source) == str(other.source) and str(self.destination) == str(other.destination)
