@@ -107,7 +107,7 @@ class Game:
               self.holdPiece = None
               self.holdPieceIndex = None
             elif self.holdPieceIndex != selected_index and valid:#if the placedf piece is in a diffent location the turn is finished
-              self.cb.putPieceToSquare(self.holdPiece,selected_index)
+              self.cb = self.cb.applyMove(move)
               self.holdPiece = None
               self.holdPieceIndex = None
               self.cb.nextPlayerTurn()

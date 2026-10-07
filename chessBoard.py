@@ -46,6 +46,28 @@ class ChessBoard:
     self.enpassant = Coordinate.no_sq
     self.castle = 0
 
+  def copy(self):
+    nb = ChessBoard.__new__(ChessBoard)
+    nb.screen, nb.attack_surface = self.screen, self.attack_surface
+    nb.width, nb.height, nb.n = self.width, nb.height, nb.n
+    nb.cell_w, nb.cell_h = self.cell_w, self.cell_h
+
+    nb.allPieces = [[Piece(p.color, p.bitmap, p.filePath, p.type) for p in side] for side in self.allPieces]
+
+    (nb.whitePawn, nb.whiteKnight, nb.whiteBishop, nb.whiteRook, nb.whiteQueen, nb.whiteKing) = nb.allPieces[0]
+    
+    (nb.blackPawn, nb.blackKnight, nb.blackBishop, nb.blackRook, nb.blackQueen, nb.blackKing) = nb.allPieces[1]
+
+    nb.side, nb.enpassant, nb.castle = self.side, self.enpassant, nb.castle
+    nb.refreshBoard()
+
+    return nb
+
+  def refreshBoard(self):
+    self.whitePieceBitboard = self.getWhiteBitboard()
+    self.blackPieceBitboard = self.getBlackBitboard()
+    self.bothPieceBitboard = self.getBothBitboard()
+
 #loop funcitons
 
 #logic functions
@@ -159,26 +181,39 @@ class ChessBoard:
     self.bothPieceBitboard = self.getBothBitboard()
 
 
-  def applyMove(self, move:Move):
-    new_board = ChessBoard()
+  def applyMove(self, move):
+    nb = self.copy()
+    src = Coordinate[move.source].value
+    dst = Coordinate[move.destination].value
 
-    new_board.screen = self.screen
-    new_board.attack_surface = self.attack_surface
-    new_board.width = self.width 
-    new_board.height = self.height 
-    new_board.n = self.n
-    new_board.cell_w = self.cell_w
-    new_board.cell_h = self.cell_h
+    source_piece = nb.getObjectByIndex(src)
+    victim = nb.getObjectByIndex(dst)
+    if victim is not None and victim.color != source_piece.color:
+        victim.bitmap = clearBit(victim.bitmap, Square(dst))   # clear the DESTINATION square
 
-    new_board.allPieces = self.allPieces
-    new_board.whitePieceBitboard = self.whitePieceBitboard
-    new_board.blackPieceBitboard = self.blackPieceBitboard
-    new_board.bothPieceBitboard = self.bothPieceBitboard
+    source_piece.bitmap = clearBit(source_piece.bitmap, Square(src))
+    source_piece.bitmap = setBit(source_piece.bitmap, Square(dst))
+    nb.refreshBitboards()
+    return nb
 
-    new_board.side = self.side
+  # def applyMove(self, move:Move):
+  #   new_board = ChessBoard(self.width, self.height, self.screen,self.attack_surface)
 
-    piece = self.popAndGetSelectedPiece(Coordinate[move.source].value)
-    dest_piece = self.getObjectByIndex(Coordinate[move.destination].value)
-    if dest_piece.color != piece.color:
-      self.clearPieceFromSquare(dest_piece, getLsbIndex(dest_piece.bitmap))
-    
+  #   new_board.n = self.n
+  #   new_board.cell_w = self.cell_w
+  #   new_board.cell_h = self.cell_h
+
+  #   new_board.allPieces = self.allPieces
+  #   new_board.whitePieceBitboard = self.whitePieceBitboard
+  #   new_board.blackPieceBitboard = self.blackPieceBitboard
+  #   new_board.bothPieceBitboard = self.bothPieceBitboard
+
+  #   new_board.side = self.side
+
+  #   source_piece = new_board.popAndGetSelectedPiece(Coordinate[move.source].value)
+  #   dest_piece = new_board.getObjectByIndex(Coordinate[move.destination].value)
+  #   if dest_piece != None and dest_piece.color != source_piece.color:
+  #     new_board.clearPieceFromSquare(dest_piece, getLsbIndex(dest_piece.bitmap))
+  #   new_board.putPieceToSquare(source_piece, Coordinate[move.destination].value)
+
+  #   return new_board
