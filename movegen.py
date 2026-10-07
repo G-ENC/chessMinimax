@@ -23,7 +23,10 @@ def getKnightMoveBitboard(square:Square, chessBoard:ChessBoard):
     return KNIGHT_ATTACKS[square.index] & ~chessBoard.blackPieceBitboard
 
 def getPawnMoveBitboard(square:Square, chessBoard:ChessBoard):
-  attack = PAWN_ATTACKS[chessBoard.side][square.index]
+
+  opp_bitboard = chessBoard.blackPieceBitboard if not chessBoard.side else chessBoard.whitePieceBitboard
+  attack = PAWN_ATTACKS[chessBoard.side][square.index] & opp_bitboard #can go diagonal only when tehre is pieces
+
   quite = np.uint64(0)
 
   if chessBoard.side == Color.WHITE:#white pawn
@@ -31,12 +34,25 @@ def getPawnMoveBitboard(square:Square, chessBoard:ChessBoard):
     if forward_sq.index >= 0:#cant go past top
       if not getBit(chessBoard.bothPieceBitboard, forward_sq):#there is no square infort
         quite = forward_sq.toBitBoard()
-  
+    
+    two_square_forward_sq = Square(square.index - 16)
+    if two_square_forward_sq.index >= 0 and getBit(RANK_2,square):
+      if not getBit(chessBoard.bothPieceBitboard, two_square_forward_sq):#there is no square infort
+        quite |= two_square_forward_sq.toBitBoard()
+
   elif chessBoard.side == Color.BLACK:#black pawn
     forward_sq = Square(square.index + 8)
+    two_square_forward_sq = Square(square.index - 16)
+    
     if forward_sq.index <= 63:#cant go past bottom
       if not getBit(chessBoard.bothPieceBitboard, forward_sq):#there is no square infort
         quite = forward_sq.toBitBoard() 
+    
+    two_square_forward_sq = Square(square.index + 16)
+    if two_square_forward_sq.index <= 63 and getBit(RANK_7,square):
+      if not getBit(chessBoard.bothPieceBitboard, two_square_forward_sq):#there is no square infort
+        quite |= two_square_forward_sq.toBitBoard()
+
   return attack | quite
 
 def getBishopMoveBitboard(square:Square, chessBoard:ChessBoard):

@@ -72,10 +72,11 @@ class Game:
     image = pygame.image.load(f"{piece.filePath}").convert_alpha()
     image = pygame.transform.scale(image, (int(self.cb.cell_w), int(self.cb.cell_h)))
     while bitmap:
-      index = getLsbIndex(bitmap)     
-      coords = self.cb.getIndexToScreenCoordinates(index)
-      image_rect = image.get_rect(topleft=coords)
-      self.cb.screen.blit(image, image_rect)
+      index = getLsbIndex(bitmap)
+      if index != self.holdPieceIndex:
+        coords = self.cb.getIndexToScreenCoordinates(index)
+        image_rect = image.get_rect(topleft=coords)
+        self.cb.screen.blit(image, image_rect)
       bitmap = clearBit(bitmap, Square(index))
         
   def drawAllPieces(self):
@@ -100,7 +101,7 @@ class Game:
           if self.holdPiece == None:#not holding any piece object
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
-              # self.holdPiece = self.cb.popAndGetSelectedPiece(selected_index)
+              self.holdPiece = self.cb.getObjectByIndex(selected_index)
           else:#holding piece
             possible_moves = generatePieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
             source = Coordinate(self.holdPieceIndex).name

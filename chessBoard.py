@@ -145,7 +145,6 @@ class ChessBoard:
     black = self.getBlackBitboard() 
     return white|black
   
-  
   #loops over the piece array and finds the matching piece that occupies the selected square
   def getObjectByIndex(self, index):
     sq = Square(index)
@@ -176,7 +175,6 @@ class ChessBoard:
     self.blackPieceBitboard = self.getBlackBitboard()
     self.bothPieceBitboard = self.getBothBitboard()
 
-
   def applyMove(self, move):
     nb = self.copy()
     src = Coordinate[move.source].value
@@ -189,7 +187,7 @@ class ChessBoard:
 
     source_piece.bitmap = clearBit(source_piece.bitmap, Square(src))
     source_piece.bitmap = setBit(source_piece.bitmap, Square(dst))
-    nb.refreshBitboards()
+    nb.refreshBoard()
     return nb
 
   # def applyMove(self, move:Move):
