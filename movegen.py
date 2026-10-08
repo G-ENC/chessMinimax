@@ -38,6 +38,7 @@ def getPawnMoveBitboard(square:Square, chessBoard:ChessBoard):
     two_square_forward_sq = Square(square.index - 16)
     if two_square_forward_sq.index >= 0 and getBit(RANK_2,square):
       if not getBit(chessBoard.bothPieceBitboard, two_square_forward_sq):#there is no square infort
+        chessBoard.enpassant = forward_sq
         quite |= two_square_forward_sq.toBitBoard()
 
   elif chessBoard.side == Color.BLACK:#black pawn
@@ -51,6 +52,7 @@ def getPawnMoveBitboard(square:Square, chessBoard:ChessBoard):
     two_square_forward_sq = Square(square.index + 16)
     if two_square_forward_sq.index <= 63 and getBit(RANK_7,square):
       if not getBit(chessBoard.bothPieceBitboard, two_square_forward_sq):#there is no square infort
+        chessBoard.enpassant = forward_sq
         quite |= two_square_forward_sq.toBitBoard()
 
   return attack | quite
