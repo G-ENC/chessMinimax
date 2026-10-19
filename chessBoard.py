@@ -188,26 +188,4 @@ class ChessBoard:
     source_piece.bitmap = clearBit(source_piece.bitmap, Square(src)) #delete the piece from its bitmap representation
     source_piece.bitmap = setBit(source_piece.bitmap, Square(dst)) #put the piece in its bitmap rep.
     nb.refreshBoard() #refresh the attributes that depend on the newly created piece
-    return nb
-
-  # def applyMove(self, move:Move):
-  #   new_board = ChessBoard(self.width, self.height, self.screen,self.attack_surface)
-
-  #   new_board.n = self.n
-  #   new_board.cell_w = self.cell_w
-  #   new_board.cell_h = self.cell_h
-
-  #   new_board.allPieces = self.allPieces
-  #   new_board.whitePieceBitboard = self.whitePieceBitboard
-  #   new_board.blackPieceBitboard = self.blackPieceBitboard
-  #   new_board.bothPieceBitboard = self.bothPieceBitboard
-
-  #   new_board.side = self.side
-
-  #   source_piece = new_board.popAndGetSelectedPiece(Coordinate[move.source].value)
-  #   dest_piece = new_board.getObjectByIndex(Coordinate[move.destination].value)
-  #   if dest_piece != None and dest_piece.color != source_piece.color:
-  #     new_board.clearPieceFromSquare(dest_piece, getLsbIndex(dest_piece.bitmap))
-  #   new_board.putPieceToSquare(source_piece, Coordinate[move.destination].value)
-
-  #   return new_board
+    return nb #give the new board

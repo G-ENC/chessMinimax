@@ -92,28 +92,29 @@ class Game:
         if event.type == pygame.QUIT:
           self.run = False
 
-        elif event.type == pygame.MOUSEMOTION:#update the screen so that the piece follows the cursor
+        elif event.type == pygame.MOUSEMOTION: #update the screen so that the piece follows the cursor
           self.update = True
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:#hold the piece if not holding already
+        elif event.type == pygame.MOUSEBUTTONDOWN: #hold the piece if not holding already
           mouse_location = pygame.mouse.get_pos()
           selected_index = int(self.cb.getScreenCoordinatesToIndex(mouse_location))
-          if self.holdPiece == None:#not holding any piece object
+          if self.holdPiece == None: #not holding any piece object
             if self.cb.getObjectByIndex(selected_index)!=None and self.cb.getObjectByIndex(selected_index).color == self.cb.side:# if the selected piece exists in that square and the it is that players turn accept the selection
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.getObjectByIndex(selected_index)
-          else:#holding piece
+          else: #holding piece
             possible_moves = generatePieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
             source = Coordinate(self.holdPieceIndex).name
             dest = Coordinate(selected_index).name
             move = Move(source,dest)
             valid = move in possible_moves
 
-            if self.holdPieceIndex == selected_index:#placement in the same square doesnt passes the turn
+            if self.holdPieceIndex == selected_index: #placement in the same square doesnt passes the turn
               self.cb.putPieceToSquare(self.holdPiece,selected_index)
               self.holdPiece = None
               self.holdPieceIndex = None
-            elif self.holdPieceIndex != selected_index and valid:#if the placedf piece is in a diffent location the turn is finished
+            elif self.holdPieceIndex != selected_index and valid: #if the placedf piece is in a diffent location the turn is finished
+              checkKingThreat(move, self.cb)
               print(f"move: {move} piece: {self.holdPiece}")
               self.cb = self.cb.applyMove(move)
               self.holdPiece = None

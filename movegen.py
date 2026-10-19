@@ -64,8 +64,8 @@ def getRookMoveBitboard(square:Square, chessBoard:ChessBoard):
 
 def getQueenMoveBitboard(square:Square, chessBoard:ChessBoard):
   return get_rook_attacks(square, chessBoard.bothPieceBitboard)|get_bishop_attacks(square, chessBoard.bothPieceBitboard) 
-#for a given quare give all the possible moves without acounting weather the kind is in check
-def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard):
+
+def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard): #for a given quare give all the possible moves without acounting weather the kind is in check
   possible_moves = [] #get all the possible move for the piece
 
   if piece.type == "p": #pawn
@@ -100,10 +100,11 @@ def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard)
     bit_index = getLsbIndex(moveset) 
     dest = Square(bit_index)
     possible_moves.append(Move(source_square, dest))
-    moveset = clearBit(moveset, dest) 
+    moveset = clearBit(moveset, dest)
+
   return possible_moves 
-#for all the squares get all possible moves
-def generateAllMoves(chessBoard: ChessBoard):
+
+def generateAllMoves(chessBoard: ChessBoard): #for all the squares get all possible moves
   all_moves = []
   for side in range(2):
     for piece in range(6):
@@ -116,5 +117,22 @@ def generateAllMoves(chessBoard: ChessBoard):
         all_moves.append(generatePieceMoves(piece_square, piece, chessBoard))
   return all_moves
 
-def checkKingThreat(chessBoard: ChessBoard):
+def checkKingThreat(move: Move,chessBoard: ChessBoard): #for 1 piece given in move check if the PIECE's king is leaved in check
+
+  #place every piece one by one in the square that king resides 
+  #check if any of them is occpied in the new board that is produced after the move
+
+  #apply a move on a potnetial board
+  potential_board = chessBoard.applyMove(move)
+
+  #we dont need to pass the piece that is moving since it is accounted for inside applymove
+  
+  #not sure
+  king_to_check = potential_board.blackKing if chessBoard.side else potential_board.whiteKing
+
+  king_pos = getLsbIndex(king_to_check.bitmap)
+  checked = potential_board.isSquareAttacked(Square(king_pos))
+   
+  if(checked):
+    print("leaves in check")
   

@@ -15,9 +15,9 @@ def printBitBoard(bitboard):
         if file == 0:
             print("  %d   " % (8-rank), end="")
         #either 1 or 0
-        RED = "\033[32m"
-        GRAY = "\033[90m"
-        bit = RED if getBit(bitboard, square) else GRAY
+        FIRST_COLOR = "\033[32m"
+        SECOND_COLOR = "\033[90m"
+        bit = FIRST_COLOR if getBit(bitboard, square) else SECOND_COLOR
         print(f"{bit}█▉\033[00m", end="")
     print()
   #print files
