@@ -9,7 +9,6 @@ from chessBoard import *
 from move import Move
 
 #moveset fucniton for each piece
-
 def getKingMoveBitboard(square:Square, chessBoard:ChessBoard):
   if chessBoard.side == Color.WHITE: #whites turn
     return KING_ATTACKS[square.index] & ~chessBoard.whitePieceBitboard #cant go past own pieces as king
@@ -65,7 +64,7 @@ def getRookMoveBitboard(square:Square, chessBoard:ChessBoard):
 
 def getQueenMoveBitboard(square:Square, chessBoard:ChessBoard):
   return get_rook_attacks(square, chessBoard.bothPieceBitboard)|get_bishop_attacks(square, chessBoard.bothPieceBitboard) 
-
+#for a given quare give all the possible moves without acounting weather the kind is in check
 def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard):
   possible_moves = [] #get all the possible move for the piece
 
@@ -103,7 +102,7 @@ def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard)
     possible_moves.append(Move(source_square, dest))
     moveset = clearBit(moveset, dest) 
   return possible_moves 
-
+#for all the squares get all possible moves
 def generateAllMoves(chessBoard: ChessBoard):
   all_moves = []
   for side in range(2):
@@ -116,3 +115,4 @@ def generateAllMoves(chessBoard: ChessBoard):
         piece_bitboard = clearBit(piece_bitboard, piece_square) 
         all_moves.append(generatePieceMoves(piece_square, piece, chessBoard))
   return all_moves
+
