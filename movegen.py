@@ -116,3 +116,5 @@ def generateAllMoves(chessBoard: ChessBoard):
         all_moves.append(generatePieceMoves(piece_square, piece, chessBoard))
   return all_moves
 
+def checkKingThreat(chessBoard: ChessBoard):
+  
