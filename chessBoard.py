@@ -72,7 +72,7 @@ class ChessBoard:
 
 #logic functions
   def isSquareAttacked(self, square:Square):
-    if self.side == Color.WHITE:
+    if self.side == Color.BLACK:
       if(PAWN_ATTACKS[Color.BLACK][square.index] & self.whitePawn.bitmap):
         return True
       elif(KNIGHT_ATTACKS[square.index] & self.whiteKnight.bitmap):
@@ -86,7 +86,7 @@ class ChessBoard:
       elif(KING_ATTACKS[square.index] & self.whiteKing.bitmap):
         return True
       
-    elif self.side == Color.BLACK:
+    elif self.side == Color.WHITE:
       if(PAWN_ATTACKS[Color.WHITE][square.index] & self.blackPawn.bitmap):
         return True
       elif(KNIGHT_ATTACKS[square.index] & self.blackKnight.bitmap):
