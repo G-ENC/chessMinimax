@@ -158,34 +158,27 @@ class ChessBoard:
     pieceObject = self.getObjectByIndex(index)
     if pieceObject:
       pieceObject.bitmap = clearBit(pieceObject.bitmap, Square(index))
-
     return pieceObject 
 
   def putPieceToSquare(self, piece:Piece, index):
     piece.bitmap = setBit(piece.bitmap, Square(index))
-    
-    self.whitePieceBitboard = self.getWhiteBitboard()
-    self.blackPieceBitboard = self.getBlackBitboard()
-    self.bothPieceBitboard = self.getBothBitboard()
+    self.refreshBoard()
 
   def clearPieceFromSquare(self, piece:Piece, index):
     piece.bitmap = clearBit(piece.bitmap, Square(index))
-    
-    self.whitePieceBitboard = self.getWhiteBitboard()
-    self.blackPieceBitboard = self.getBlackBitboard()
-    self.bothPieceBitboard = self.getBothBitboard()
+    self.refreshBoard()    
 
-  def applyMove(self, move):
-    nb = self.copy() #copies the board 
-    src = Coordinate[move.source].value #gets a move object which has a soruce and a destination attribute
-    dst = Coordinate[move.destination].value
+  def applyMove(self, move: Move):
+    nb = self.copy() #copies the board
+    src = move.source.index #gets a move object which has a soruce and a destination attribute
+    dst = move.destination.index
 
     source_piece = nb.getObjectByIndex(src) #piece on the source square
-    victim = nb.getObjectByIndex(dst) 
+    victim = nb.getObjectByIndex(dst)
     if victim is not None and victim.color != source_piece.color: #if there is a oponent piece on destination square
         victim.bitmap = clearBit(victim.bitmap, Square(dst)) #clear the DESTINATION square
 
-    source_piece.bitmap = clearBit(source_piece.bitmap, Square(src)) #delete the piece from its bitmap representation
-    source_piece.bitmap = setBit(source_piece.bitmap, Square(dst)) #put the piece in its bitmap rep.
+    source_piece.bitmap = clearBit(source_piece.bitmap, move.source) #delete the piece from its bitmap representation
+    source_piece.bitmap = setBit(source_piece.bitmap, move.destination) #put the piece in its bitmap rep.
     nb.refreshBoard() #refresh the attributes that depend on the newly created piece
     return nb #give the new board

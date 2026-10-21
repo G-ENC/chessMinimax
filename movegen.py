@@ -118,21 +118,15 @@ def generateAllMoves(chessBoard: ChessBoard): #for all the squares get all possi
   return all_moves
 
 def checkKingThreat(move: Move,chessBoard: ChessBoard): #for 1 piece given in move check if the PIECE's king is leaved in check
-
-  #place every piece one by one in the square that king resides 
+  #place every piece one by one in the square that king resides
   #check if any of them is occpied in the new board that is produced after the move
-
   #apply a move on a potnetial board
   potential_board = chessBoard.applyMove(move)
-
   #we dont need to pass the piece that is moving since it is accounted for inside applymove
-  
   #not sure
   king_to_check = potential_board.blackKing if chessBoard.side else potential_board.whiteKing
-
-  king_pos = getLsbIndex(king_to_check.bitmap)
-  checked = potential_board.isSquareAttacked(Square(king_pos))
-   
+  king_pos_index = getLsbIndex(king_to_check.bitmap)
+  checked = potential_board.isSquareAttacked(Square(king_pos_index))  
   if(checked):
     return True
   else:
@@ -142,8 +136,10 @@ def generateLegalPieceMoves(source_square:Square, piece:Piece, chessBoard: Chess
   moves = generatePieceMoves(source_square, piece, chessBoard)
   legal_moves = []
   for move in moves:
+    # print(type(move.destination.index))
     if checkKingThreat(move, chessBoard) == False: #not leaves the king in check
-      if getBit(chessBoard.getBothBitboard, Square(Coordinate[move.destination].value)): #not goes on top of its own piece
+      ownPiece = chessBoard.blackPieceBitboard if chessBoard.side else chessBoard.whitePieceBitboard
+      if getBit(ownPiece, move.destination) == 0: #not goes on top of its own piece
         legal_moves.append(move)
   return legal_moves
 

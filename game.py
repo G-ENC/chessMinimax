@@ -59,7 +59,7 @@ class Game:
     self.screen.blit(self.cb.attack_surface, (0,0))
 
   def drawCurrentAttackSquares(self, square, piece:Piece, cb):
-    moves = generatePieceMoves(square, piece, cb)
+    moves = generateLegalPieceMoves(square, piece, cb)
     self.attack_surface.fill(pygame.Color(0,0,0,0))   
     for move in moves:
       x,y = self.cb.getIndexToScreenCoordinates(move.destination.index)
@@ -103,9 +103,9 @@ class Game:
               self.holdPieceIndex = selected_index
               self.holdPiece = self.cb.getObjectByIndex(selected_index)
           else: #holding piece
-            possible_moves = generatePieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
-            source = Coordinate(self.holdPieceIndex).name
-            dest = Coordinate(selected_index).name
+            possible_moves = generateLegalPieceMoves(Square(self.holdPieceIndex), self.holdPiece, self.cb)
+            source = Square(self.holdPieceIndex)
+            dest = Square(selected_index)
             move = Move(source,dest)
             valid = move in possible_moves
 
@@ -114,8 +114,6 @@ class Game:
               self.holdPiece = None
               self.holdPieceIndex = None
             elif self.holdPieceIndex != selected_index and valid: #if the placedf piece is in a diffent location the turn is finished
-              checkKingThreat(move, self.cb)
-              print(f"move: {move} piece: {self.holdPiece}")
               self.cb = self.cb.applyMove(move)
               self.holdPiece = None
               self.holdPieceIndex = None
