@@ -134,5 +134,17 @@ def checkKingThreat(move: Move,chessBoard: ChessBoard): #for 1 piece given in mo
   checked = potential_board.isSquareAttacked(Square(king_pos))
    
   if(checked):
-    print("leaves in check")
-  
+    return True
+  else:
+    return False
+
+def generateLegalPieceMoves(source_square:Square, piece:Piece, chessBoard: ChessBoard):
+  moves = generatePieceMoves(source_square, piece, chessBoard)
+  legal_moves = []
+  for move in moves:
+    if checkKingThreat(move, chessBoard) == False: #not leaves the king in check
+      if getBit(chessBoard.getBothBitboard, Square(Coordinate[move.destination].value)): #not goes on top of its own piece
+        legal_moves.append(move)
+  return legal_moves
+
+
