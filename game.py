@@ -85,9 +85,11 @@ class Game:
         self.drawPiecesFromBitboard(self.cb.allPieces[side][piece])
 
   def initGame(self):
+    
     self.cb.nextPlayerTurn()
     
     while self.run:
+      
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           self.run = False

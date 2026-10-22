@@ -77,7 +77,7 @@ def generatePieceMoves(source_square:Square, piece:Piece, chessBoard:ChessBoard)
       while(moveset): #for all the bits that are avaible loop every single one and save it as a possible Move() which has a source and destination 
         bit_index = getLsbIndex(moveset) #get lsb 
         dest = Square(bit_index)
-        possible_moves.append([Move(source_square, dest, True)])
+        possible_moves.append(Move(source_square, dest, True))
         moveset = clearBit(moveset, dest) #delete that bit so the next lsb is  new one
       return possible_moves
 

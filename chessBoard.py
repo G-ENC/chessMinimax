@@ -167,7 +167,7 @@ class ChessBoard:
   def clearPieceFromSquare(self, piece:Piece, index):
     piece.bitmap = clearBit(piece.bitmap, Square(index))
     self.refreshBoard()    
-
+  
   def applyMove(self, move: Move):
     nb = self.copy() #copies the board
     src = move.source.index #gets a move object which has a soruce and a destination attribute
@@ -180,5 +180,12 @@ class ChessBoard:
 
     source_piece.bitmap = clearBit(source_piece.bitmap, move.source) #delete the piece from its bitmap representation
     source_piece.bitmap = setBit(source_piece.bitmap, move.destination) #put the piece in its bitmap rep.
+
+    if move.promotion == True:
+      print("True")
+      source_piece.bitmap = clearBit(source_piece.bitmap, move.destination)
+      queen = nb.whiteQueen if nb.side == 0 else nb.blackQueen
+      queen.bitmap = setBit(queen.bitmap, move.destination)
+
     nb.refreshBoard() #refresh the attributes that depend on the newly created piece
     return nb #give the new board
